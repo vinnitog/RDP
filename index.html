@@ -346,15 +346,19 @@ function initRecognition() {
   recognition.interimResults = true;
 
   recognition.onresult = (e) => {
-    let interim = '', final = '';
+    // Usa e.resultIndex para processar SOMENTE os resultados novos desta entrega
+    // evitando que o Chrome Mobile re-entregue resultados anteriores acumulados
+    let interim = '';
     for (let i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
-      else interim += e.results[i][0].transcript;
+      if (e.results[i].isFinal) {
+        transcript += e.results[i][0].transcript + ' ';
+      } else {
+        interim += e.results[i][0].transcript;
+      }
     }
-    transcript += final;
     const d = document.getElementById('transcript-display');
     d.classList.remove('placeholder');
-    d.textContent = (transcript + interim) || '...';
+    d.textContent = (transcript + interim).trim() || '...';
   };
 
   recognition.onerror = (e) => {
@@ -412,6 +416,9 @@ function stopRecording() {
   const isPlaceholder = document.getElementById('transcript-display').classList.contains('placeholder');
   if (!transcript.trim() && displayed && !isPlaceholder) transcript = displayed;
 
+  // Deduplica: remove frases/segmentos repetidos consecutivos que o Chrome Mobile produz
+  transcript = deduplicateTranscript(transcript);
+
   if (transcript.trim()) {
     // Preenche data/hora automaticamente
     const now = new Date();
@@ -438,6 +445,46 @@ function stopRecording() {
 // Fala esperada: "situação: estava no trabalho... automático: achei que ia falhar...
 //  sentimento: ansiedade... nível de ansiedade inicial: 8... reação: fui embora...
 //  alternativo: posso tentar de novo... nível de ansiedade final: 4"
+// Remove repetições consecutivas que o Chrome Mobile produz ao reiniciar recognition.
+// Estratégia: divide em palavras e usa uma janela deslizante para detectar
+// blocos repetidos e manter apenas a ocorrência mais longa/final.
+function deduplicateTranscript(text) {
+  if (!text) return text;
+  const words = text.trim().split(/\s+/);
+  if (words.length < 4) return text;
+
+  const result = [];
+  let i = 0;
+
+  while (i < words.length) {
+    // Tenta encontrar repetição: pega uma janela de N palavras e vê se repete logo adiante
+    let foundRepeat = false;
+    // Testa janelas de 2 a 8 palavras
+    for (let winSize = 8; winSize >= 2; winSize--) {
+      if (i + winSize > words.length) continue;
+      const window = words.slice(i, i + winSize).join(' ').toLowerCase();
+      // Procura essa janela repetida nas próximas posições
+      for (let j = i + 1; j < Math.min(i + winSize * 3, words.length - winSize + 1); j++) {
+        const candidate = words.slice(j, j + winSize).join(' ').toLowerCase();
+        if (candidate === window) {
+          // Repetição encontrada: pula até depois da última ocorrência
+          // Avança i para j (começa da repetição, descartando o original)
+          i = j;
+          foundRepeat = true;
+          break;
+        }
+      }
+      if (foundRepeat) break;
+    }
+    if (!foundRepeat) {
+      result.push(words[i]);
+      i++;
+    }
+  }
+
+  return result.join(' ');
+}
+
 function parseTranscriptIntoFields(text) {
   // Normaliza: minúsculas, remove pontuação excessiva
   const t = text.toLowerCase()
@@ -547,16 +594,21 @@ function parseTranscriptIntoFields(text) {
 }
 
 function extractNumber(str) {
-  // Converte palavras numéricas PT-BR e dígitos
+  // Pega apenas o PRIMEIRO token (até o primeiro espaço) para evitar
+  // capturar números que apareçam mais adiante no texto do campo
+  const firstToken = str.trim().split(/\s+/)[0].toLowerCase();
   const words = {
     'zero':0,'um':1,'dois':2,'três':3,'tres':3,'quatro':4,'cinco':5,
     'seis':6,'sete':7,'oito':8,'nove':9,'dez':10
   };
-  const s = str.toLowerCase().trim();
+  // Tenta correspondência exata pela palavra por extenso
   for (const [w, n] of Object.entries(words)) {
-    if (s.startsWith(w)) return Math.min(10, Math.max(0, n));
+    if (firstToken === w || firstToken.startsWith(w)) {
+      return Math.min(10, Math.max(0, n));
+    }
   }
-  const m = s.match(/\d+/);
+  // Tenta dígito(s) no primeiro token
+  const m = firstToken.match(/^\d+/);
   if (m) return Math.min(10, Math.max(0, parseInt(m[0])));
   return null;
 }
