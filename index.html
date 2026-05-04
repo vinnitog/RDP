@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Reg. Pensamentos">
+<meta name="theme-color" content="#7c6a8e">
+<title>Registro de Pensamentos</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0eb;
+    --surface: #fffdf9;
+    --surface2: #f0ebe3;
+    --accent: #7c6a8e;
+    --accent2: #c4a882;
+    --text: #2c2620;
+    --text-muted: #8a7a6e;
+    --placeholder: #c8bdb5;
+    --border: #ddd5c8;
+    --success: #6a9c7a;
+    --recording: #e05b5b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  header {
+    background: var(--accent);
+    padding: 22px 20px 18px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  header h1 { font-family: 'Lora', serif; font-size: 1.3rem; color: #ede7f6; letter-spacing: 0.03em; }
+  header p  { font-size: 0.72rem; color: #c9bdd8; margin-top: 3px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .tabs { display: flex; background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .tab  { flex: 1; padding: 12px 8px; text-align: center; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── RECORD ── */
+  .record-area { padding: 28px 20px 20px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+
+  .record-card { background: var(--surface); border-radius: 20px; padding: 28px 24px; width: 100%; text-align: center; border: 1px solid var(--border); box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+
+  .mic-btn {
+    width: 88px; height: 88px; border-radius: 50%; border: none; background: var(--accent);
+    color: white; font-size: 2.2rem; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; box-shadow: 0 4px 20px rgba(124,106,142,0.4);
+  }
+  .mic-btn:active { transform: scale(0.94); }
+  .mic-btn.recording { background: var(--recording); animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(224,91,91,0.5); }
+    70%  { box-shadow: 0 0 0 18px rgba(224,91,91,0); }
+    100% { box-shadow: 0 0 0 0   rgba(224,91,91,0); }
+  }
+
+  .mic-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; }
+  .timer { font-family: 'Lora', serif; font-size: 1.8rem; color: var(--accent); min-height: 2rem; letter-spacing: 0.05em; }
+  .timer.recording { color: var(--recording); }
+
+  .transcript-box { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; min-height: 100px; }
+  .transcript-box label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); display: block; margin-bottom: 8px; }
+  .transcript-text { font-size: 0.92rem; line-height: 1.6; color: var(--text); font-style: italic; min-height: 60px; }
+  .transcript-text.placeholder { color: var(--placeholder); font-style: normal; }
+
+  .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--success); margin-right: 6px; }
+  .status-dot.off { background: var(--border); }
+
+  .no-support { background: #fff3cd; border: 1px solid #ffc107; border-radius: 12px; padding: 14px; font-size: 0.85rem; color: #856404; text-align: center; margin-bottom: 16px; display: none; }
+
+  /* ── FORM ── */
+  .form-area { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+
+  .field-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); padding: 16px; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
+  .field-card label { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 500; margin-bottom: 8px; }
+
+  .field-card textarea,
+  .field-card input[type=text] {
+    width: 100%; border: none; background: transparent;
+    font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
+    color: var(--text); resize: none; outline: none; line-height: 1.6;
+  }
+  .field-card textarea { min-height: 60px; }
+
+  /* Placeholders bem claros — não confunde com texto real */
+  .field-card textarea::placeholder,
+  .field-card input[type=text]::placeholder {
+    color: var(--placeholder);
+    font-style: italic;
+    opacity: 1;
+  }
+
+  .slider-row { display: flex; align-items: center; gap: 12px; }
+  .slider-row input[type=range] { flex: 1; accent-color: var(--accent); height: 6px; cursor: pointer; }
+  .slider-val { font-family: 'Lora', serif; font-size: 1.3rem; color: var(--accent); min-width: 30px; text-align: right; }
+
+  .form-actions { display: flex; gap: 10px; padding: 0 20px 10px; }
+  .btn-save { flex: 1; padding: 14px; border-radius: 14px; border: none; background: var(--accent); color: white; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
+  .btn-clear { padding: 14px 18px; border-radius: 14px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; cursor: pointer; }
+
+  /* ── HISTORY ── */
+  .history-area { padding: 20px; }
+  .history-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); font-style: italic; }
+  .history-empty .icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
+
+  .days-counter { font-size: 0.76rem; color: var(--text-muted); text-align: center; padding: 0 0 14px; }
+  .days-counter span { color: var(--accent); font-weight: 700; font-size: 0.88rem; }
+
+  .history-item { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); padding: 16px; margin-bottom: 12px; cursor: pointer; transition: box-shadow 0.2s; }
+  .history-item:active { box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+  .history-date { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent2); margin-bottom: 6px; }
+  .history-situation { font-size: 0.9rem; font-weight: 500; margin-bottom: 4px; color: var(--text); line-height: 1.4; }
+  .history-feeling { font-size: 0.8rem; color: var(--text-muted); }
+  .history-anx { display: inline-block; margin-top: 8px; background: var(--surface2); color: var(--accent); font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+  .btn-del { float: right; background: none; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; padding: 0 0 0 10px; }
+
+  /* ── EXPORT BANNER ── */
+  /* send panel — always visible in history when there are records */
+  .send-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .send-panel-label { font-size: 0.78rem; color: var(--text-muted); flex: 1; min-width: 100px; }
+  .send-panel-label strong { display: block; color: var(--text); font-size: 0.86rem; margin-bottom: 2px; }
+  .send-panel-btns { display: flex; gap: 7px; flex-wrap: wrap; }
+  .btn-export       { padding: 8px 13px; border-radius: 10px; border: none; background: var(--success); color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .btn-export-email { padding: 8px 13px; border-radius: 10px; border: none; background: var(--accent); color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .btn-export-clear { padding: 8px 13px; border-radius: 10px; border: 1px solid #bbb; background: transparent; color: #666; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
+
+  /* locked banner — shown on record & form pages when limit reached */
+  .locked-banner {
+    margin: 24px 20px 0;
+    background: #fff3cd;
+    border: 1.5px solid #f0ad4e;
+    border-radius: 16px;
+    padding: 22px 20px;
+    text-align: center;
+  }
+  .locked-banner h3 { font-family: 'Lora', serif; font-size: 1rem; color: #7a5000; margin-bottom: 8px; }
+  .locked-banner p  { font-size: 0.82rem; color: #7a5000; line-height: 1.5; margin-bottom: 14px; }
+  .btn-go-history   { padding: 11px 22px; border-radius: 12px; border: none; background: #f0ad4e; color: white; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem; cursor: pointer; }
+
+  /* ── TOAST ── */
+  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; opacity: 0; transition: all 0.3s; z-index: 200; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧠 Registro de Pensamentos</h1>
+  <p>Terapia Cognitivo-Comportamental</p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('record',this)">🎙️ Gravar</div>
+  <div class="tab" onclick="showTab('form',this)">📝 Formulário</div>
+  <div class="tab" onclick="showTab('history',this)">📋 Histórico</div>
+</div>
+
+<!-- RECORD -->
+<div class="page active" id="page-record">
+  <!-- shown when limit reached -->
+  <div id="record-locked" class="locked-banner" style="display:none">
+    <h3>🔒 Limite de 10 dias atingido</h3>
+    <p>Você não pode criar novos registros até enviar o histórico e limpar o ciclo.<br>Vá ao Histórico, envie por email e clique em "Limpar histórico".</p>
+    <button class="btn-go-history" onclick="goHistory()">📋 Ir para o Histórico</button>
+  </div>
+  <!-- normal content -->
+  <div id="record-content" class="record-area">
+    <div class="no-support" id="no-support">
+      ⚠️ Seu navegador não suporta reconhecimento de voz. Use o Chrome para melhor experiência. Você pode digitar manualmente na aba Formulário.
+    </div>
+    <div class="record-card">
+      <p class="mic-label" id="mic-label">Toque para iniciar a gravação</p>
+      <button class="mic-btn" id="mic-btn" onclick="toggleRecording()">🎤</button>
+      <div class="timer" id="timer">0:00</div>
+    </div>
+    <div class="transcript-box">
+      <label><span class="status-dot off" id="status-dot"></span>Transcrição</label>
+      <div class="transcript-text placeholder" id="transcript-display">
+        Grave um áudio descrevendo como você está se sentindo, o que aconteceu, seus pensamentos e reações...
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="page" id="page-form">
+  <!-- shown when limit reached -->
+  <div id="form-locked" class="locked-banner" style="display:none">
+    <h3>🔒 Limite de 10 dias atingido</h3>
+    <p>Você não pode salvar novos registros até enviar o histórico e limpar o ciclo.<br>Vá ao Histórico, envie por email e clique em "Limpar histórico".</p>
+    <button class="btn-go-history" onclick="goHistory()">📋 Ir para o Histórico</button>
+  </div>
+  <div id="form-content">
+  <div class="form-area">
+    <div class="field-card">
+      <label>📅 Data / Hora</label>
+      <input type="text" id="f-datetime" placeholder="preenchido automaticamente ao encerrar gravação">
+    </div>
+    <div class="field-card">
+      <label>📍 Situação</label>
+      <textarea id="f-situation" placeholder="onde você estava, o que aconteceu, com quem..."></textarea>
+    </div>
+    <div class="field-card">
+      <label>💭 Pensamento Automático</label>
+      <textarea id="f-thought" placeholder="o que passou pela sua cabeça naquele momento..."></textarea>
+    </div>
+    <div class="field-card">
+      <label>❤️ Sentimento</label>
+      <textarea id="f-feeling" placeholder="que emoção você sentiu — ansiedade, tristeza, raiva..."></textarea>
+    </div>
+    <div class="field-card">
+      <label>📊 Grau de Ansiedade Inicial (0–10)</label>
+      <div class="slider-row">
+        <input type="range" min="0" max="10" value="0" id="f-anxiety1"
+          oninput="document.getElementById('anx1-val').textContent=this.value">
+        <span class="slider-val" id="anx1-val">0</span>
+      </div>
+    </div>
+    <div class="field-card">
+      <label>⚡ Reação / Comportamento</label>
+      <textarea id="f-reaction" placeholder="como você reagiu, o que fez..."></textarea>
+    </div>
+    <div class="field-card">
+      <label>🌱 Pensamento Alternativo</label>
+      <textarea id="f-alt-thought" placeholder="uma forma mais equilibrada de ver a situação..."></textarea>
+    </div>
+    <div class="field-card">
+      <label>📊 Grau de Ansiedade Final (0–10)</label>
+      <div class="slider-row">
+        <input type="range" min="0" max="10" value="0" id="f-anxiety2"
+          oninput="document.getElementById('anx2-val').textContent=this.value">
+        <span class="slider-val" id="anx2-val">0</span>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button class="btn-clear" onclick="clearForm()">🗑️ Limpar</button>
+    <button class="btn-save" onclick="saveRecord()">💾 Salvar Registro</button>
+  </div>
+  </div><!-- /form-content -->
+</div>
+
+<!-- HISTORY -->
+<div class="page" id="page-history">
+  <div class="history-area" id="history-area">
+    <div class="history-empty">
+      <div class="icon">📖</div>
+      <p>Nenhum registro ainda.<br>Grave seu primeiro áudio!</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const EMAIL_DEST = 'vinnitog@gmail.com';
+const MAX_DAYS   = 10;
+
+let recognition   = null;
+let isRecording   = false;
+let transcript    = '';
+let timerInterval = null;
+let seconds       = 0;
+let records       = [];
+try { records = JSON.parse(localStorage.getItem('rp_records') || '[]'); } catch(e) { records = []; }
+
+function storageSave(data) {
+  try { localStorage.setItem('rp_records', JSON.stringify(data)); } catch(e) {}
+}
+
+// ── TABS ──────────────────────────────────────────────────────
+function showTab(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  el.classList.add('active');
+  if (name === 'history') renderHistory();
+  if (name === 'record' || name === 'form') applyLockUI();
+}
+
+function goHistory() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-history').classList.add('active');
+  document.querySelectorAll('.tab')[2].classList.add('active');
+  renderHistory();
+}
+
+function isLocked() {
+  return countDays() >= MAX_DAYS;
+}
+
+function applyLockUI() {
+  const locked = isLocked();
+  // Record page
+  document.getElementById('record-locked').style.display  = locked ? 'block' : 'none';
+  document.getElementById('record-content').style.display = locked ? 'none'  : 'flex';
+  // Form page
+  document.getElementById('form-locked').style.display    = locked ? 'block' : 'none';
+  document.getElementById('form-content').style.display   = locked ? 'none'  : 'block';
+}
+
+// ── SPEECH ────────────────────────────────────────────────────
+function initRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('no-support').style.display = 'block';
+    document.getElementById('mic-btn').disabled = true;
+    return false;
+  }
+  recognition = new SR();
+  recognition.lang = 'pt-BR';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onresult = (e) => {
+    let interim = '', final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+      else interim += e.results[i][0].transcript;
+    }
+    transcript += final;
+    const d = document.getElementById('transcript-display');
+    d.classList.remove('placeholder');
+    d.textContent = (transcript + interim) || '...';
+  };
+
+  recognition.onerror = (e) => {
+    if (e.error === 'not-allowed') showToast('Permita o acesso ao microfone');
+    stopRecording();
+  };
+
+  recognition.onend = () => { if (isRecording) recognition.start(); };
+  return true;
+}
+
+function toggleRecording() {
+  if (isRecording) stopRecording(); else startRecording();
+}
+
+function startRecording() {
+  if (isLocked()) { showToast('Limite atingido. Envie o histórico primeiro.'); return; }
+  if (!recognition && !initRecognition()) return;
+  transcript = '';
+  const d = document.getElementById('transcript-display');
+  d.classList.add('placeholder');
+  d.textContent = 'Ouvindo...';
+
+  try { recognition.start(); }
+  catch(e) { recognition.stop(); setTimeout(() => recognition.start(), 200); }
+
+  isRecording = true;
+  seconds = 0;
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = Math.floor(seconds / 60), s = seconds % 60;
+    document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  }, 1000);
+
+  document.getElementById('mic-btn').classList.add('recording');
+  document.getElementById('mic-btn').textContent = '⏹️';
+  document.getElementById('mic-label').textContent = 'Gravando... toque para parar';
+  document.getElementById('timer').classList.add('recording');
+  document.getElementById('status-dot').classList.remove('off');
+}
+
+function stopRecording() {
+  if (recognition) recognition.stop();
+  isRecording = false;
+  clearInterval(timerInterval);
+
+  document.getElementById('mic-btn').classList.remove('recording');
+  document.getElementById('mic-btn').textContent = '🎤';
+  document.getElementById('mic-label').textContent = 'Toque para iniciar a gravação';
+  document.getElementById('timer').classList.remove('recording');
+  document.getElementById('status-dot').classList.add('off');
+
+  // Fallback: pega texto visível se variável interna estiver vazia
+  const displayed = document.getElementById('transcript-display').textContent.trim();
+  const isPlaceholder = document.getElementById('transcript-display').classList.contains('placeholder');
+  if (!transcript.trim() && displayed && !isPlaceholder) transcript = displayed;
+
+  if (transcript.trim()) {
+    // Preenche data/hora automaticamente
+    const now = new Date();
+    document.getElementById('f-datetime').value =
+      now.toLocaleDateString('pt-BR') + ', ' +
+      now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+
+    document.getElementById('transcript-display').classList.remove('placeholder');
+    document.getElementById('transcript-display').textContent = transcript.trim();
+
+    // Tenta preencher campos via palavras-chave
+    const filled = parseTranscriptIntoFields(transcript);
+    if (filled) {
+      showToast('Campos preenchidos automaticamente! Revise o formulário ✅');
+    } else {
+      showToast('Gravação concluída! Preencha o formulário ✅');
+    }
+  } else {
+    showToast('Nada capturado. Tente falar novamente.');
+  }
+}
+
+// ── PARSER DE CAMPOS POR PALAVRAS-CHAVE ──────────────────────
+// Fala esperada: "situação: estava no trabalho... automático: achei que ia falhar...
+//  sentimento: ansiedade... nível de ansiedade inicial: 8... reação: fui embora...
+//  alternativo: posso tentar de novo... nível de ansiedade final: 4"
+function parseTranscriptIntoFields(text) {
+  // Normaliza: minúsculas, remove pontuação excessiva
+  const t = text.toLowerCase()
+    .replace(/[:\-–]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // Marcadores aceitos por campo (variações que o reconhecimento de voz pode produzir)
+  const MARKERS = {
+    situation: [
+      'situação', 'situacao', 'a situação', 'situação foi', 'situação é',
+    ],
+    thought: [
+      'pensamento automático', 'pensamento automatico', 'automático', 'automatico',
+      'o automático', 'pensamento auto'
+    ],
+    feeling: [
+      'sentimento', 'sentimentos', 'o sentimento', 'emoção', 'emocao'
+    ],
+    anxiety1: [
+      'nível de ansiedade inicial', 'nivel de ansiedade inicial',
+      'ansiedade inicial', 'grau de ansiedade inicial',
+      'nível inicial', 'nivel inicial', 'ansiedade antes'
+    ],
+    reaction: [
+      'reação', 'reacao', 'a reação', 'minha reação', 'reagi', 'comportamento'
+    ],
+    altThought: [
+      'pensamento alternativo', 'alternativo', 'o alternativo',
+      'pensamento alternativo foi', 'alternativa'
+    ],
+    anxiety2: [
+      'nível de ansiedade final', 'nivel de ansiedade final',
+      'ansiedade final', 'grau de ansiedade final',
+      'nível final', 'nivel final', 'ansiedade depois', 'ansiedade agora'
+    ]
+  };
+
+  // Ordena todos os marcadores por posição de ocorrência no texto
+  const found = [];
+  for (const [field, keywords] of Object.entries(MARKERS)) {
+    for (const kw of keywords) {
+      const idx = t.indexOf(kw);
+      if (idx !== -1) {
+        found.push({ field, kw, idx, kwLen: kw.length });
+        break; // usa só o primeiro match por campo
+      }
+    }
+  }
+
+  if (found.length === 0) return false; // nenhuma palavra-chave encontrada
+
+  // Ordena por posição
+  found.sort((a, b) => a.idx - b.idx);
+
+  // Extrai o conteúdo entre cada marcador e o próximo
+  const extracted = {};
+  for (let i = 0; i < found.length; i++) {
+    const start = found[i].idx + found[i].kwLen;
+    const end   = found[i + 1] ? found[i + 1].idx : t.length;
+    let value = text.substring(start, end).trim(); // usa texto original (com case)
+    // Remove pontuação inicial (dois pontos, vírgula, hífen)
+    value = value.replace(/^[\s:,\-–\.]+/, '').trim();
+    if (value) extracted[found[i].field] = value;
+  }
+
+  // Preenche campos
+  let filledCount = 0;
+  if (extracted.situation) {
+    document.getElementById('f-situation').value = capitalize(extracted.situation);
+    filledCount++;
+  }
+  if (extracted.thought) {
+    document.getElementById('f-thought').value = capitalize(extracted.thought);
+    filledCount++;
+  }
+  if (extracted.feeling) {
+    document.getElementById('f-feeling').value = capitalize(extracted.feeling);
+    filledCount++;
+  }
+  if (extracted.reaction) {
+    document.getElementById('f-reaction').value = capitalize(extracted.reaction);
+    filledCount++;
+  }
+  if (extracted.altThought) {
+    document.getElementById('f-alt-thought').value = capitalize(extracted.altThought);
+    filledCount++;
+  }
+  if (extracted.anxiety1) {
+    const n = extractNumber(extracted.anxiety1);
+    if (n !== null) {
+      document.getElementById('f-anxiety1').value = n;
+      document.getElementById('anx1-val').textContent = n;
+      filledCount++;
+    }
+  }
+  if (extracted.anxiety2) {
+    const n = extractNumber(extracted.anxiety2);
+    if (n !== null) {
+      document.getElementById('f-anxiety2').value = n;
+      document.getElementById('anx2-val').textContent = n;
+      filledCount++;
+    }
+  }
+
+  return filledCount > 0;
+}
+
+function extractNumber(str) {
+  // Converte palavras numéricas PT-BR e dígitos
+  const words = {
+    'zero':0,'um':1,'dois':2,'três':3,'tres':3,'quatro':4,'cinco':5,
+    'seis':6,'sete':7,'oito':8,'nove':9,'dez':10
+  };
+  const s = str.toLowerCase().trim();
+  for (const [w, n] of Object.entries(words)) {
+    if (s.startsWith(w)) return Math.min(10, Math.max(0, n));
+  }
+  const m = s.match(/\d+/);
+  if (m) return Math.min(10, Math.max(0, parseInt(m[0])));
+  return null;
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// ── FORM ──────────────────────────────────────────────────────
+function clearForm() {
+  ['f-datetime','f-situation','f-thought','f-feeling','f-reaction','f-alt-thought']
+    .forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('f-anxiety1').value = 0;
+  document.getElementById('anx1-val').textContent = '0';
+  document.getElementById('f-anxiety2').value = 0;
+  document.getElementById('anx2-val').textContent = '0';
+  transcript = '';
+  document.getElementById('timer').textContent = '0:00';
+  const d = document.getElementById('transcript-display');
+  d.classList.add('placeholder');
+  d.textContent = 'Grave um áudio descrevendo como você está se sentindo, o que aconteceu, seus pensamentos e reações...';
+}
+
+function saveRecord() {
+  const now = new Date();
+  const rec = {
+    id:        Date.now(),
+    datetime:  document.getElementById('f-datetime').value || now.toLocaleString('pt-BR'),
+    dateKey:   now.toLocaleDateString('pt-BR'),
+    situation: document.getElementById('f-situation').value,
+    thought:   document.getElementById('f-thought').value,
+    feeling:   document.getElementById('f-feeling').value,
+    anxiety1:  document.getElementById('f-anxiety1').value,
+    reaction:  document.getElementById('f-reaction').value,
+    altThought:document.getElementById('f-alt-thought').value,
+    anxiety2:  document.getElementById('f-anxiety2').value,
+    transcript: transcript
+  };
+
+  if (isLocked()) { showToast('Limite atingido. Envie o histórico primeiro.'); return; }
+  if (!rec.situation && !rec.thought && !rec.feeling) {
+    showToast('Preencha pelo menos situação, pensamento ou sentimento'); return;
+  }
+
+  records.unshift(rec);
+  storageSave(records);
+  clearForm();
+  showToast('Registro salvo! 💜');
+
+  setTimeout(() => {
+    goHistory();
+  }, 600);
+}
+
+// ── EXPORT ────────────────────────────────────────────────────
+function countDays() {
+  return new Set(records.map(r => r.dateKey || r.datetime.split(',')[0].trim())).size;
+}
+
+function buildExportText() {
+  const lines = [
+    'REGISTRO DE PENSAMENTOS — TCC',
+    'Exportado em: ' + new Date().toLocaleString('pt-BR'),
+    'Total de registros: ' + records.length,
+    '='.repeat(50), ''
+  ];
+  records.forEach((r, i) => {
+    lines.push(`REGISTRO ${i + 1} — ${r.datetime}`);
+    lines.push('-'.repeat(40));
+    if (r.situation)   lines.push(`Situação:               ${r.situation}`);
+    if (r.thought)     lines.push(`Pensamento automático:  ${r.thought}`);
+    if (r.feeling)     lines.push(`Sentimento:             ${r.feeling}`);
+    lines.push(         `Ansiedade inicial:      ${r.anxiety1}/10`);
+    if (r.reaction)    lines.push(`Reação:                 ${r.reaction}`);
+    if (r.altThought)  lines.push(`Pensamento alternativo: ${r.altThought}`);
+    lines.push(         `Ansiedade final:        ${r.anxiety2}/10`);
+    if (r.transcript)  lines.push(`[Áudio transcrito: ${r.transcript}]`);
+    lines.push('');
+  });
+  return lines.join('\n');
+}
+
+function downloadExport() {
+  const blob = new Blob([buildExportText()], {type: 'text/plain;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const date = new Date().toLocaleDateString('pt-BR').replace(/\//g,'-');
+  a.href = url; a.download = `registro-pensamentos-${date}.txt`; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Arquivo baixado! ⬇️');
+}
+
+function openEmail() {
+  const subject = encodeURIComponent('Registro de Pensamentos TCC — ' + new Date().toLocaleDateString('pt-BR'));
+  const body    = encodeURIComponent(buildExportText());
+  window.open(`https://mail.google.com/mail/?view=cm&to=${EMAIL_DEST}&su=${subject}&body=${body}`, '_blank');
+}
+
+function confirmClear() {
+  if (confirm('Histórico exportado?\n\nAo confirmar, todos os registros serão apagados e um novo ciclo começará.')) {
+    records = [];
+    storageSave(records);
+    renderHistory();
+    showToast('Histórico limpo! Novo ciclo iniciado ✨');
+  }
+}
+
+// ── HISTORY ───────────────────────────────────────────────────
+function renderHistory() {
+  const area   = document.getElementById('history-area');
+  const dias   = countDays();
+  const locked = dias >= MAX_DAYS;
+
+  let html = '';
+
+  if (records.length > 0) {
+    const urgentLabel = locked
+      ? `<strong style="color:#c0393b">🔒 Limite atingido — envie e limpe para continuar</strong>`
+      : `<strong>Enviar histórico</strong>`;
+    const urgentNote = locked
+      ? `Você atingiu ${MAX_DAYS} dias. <b>Novos registros estão bloqueados</b> até enviar e limpar.`
+      : `Envie a qualquer momento e limpe para começar um novo ciclo.`;
+
+    html += `
+    <div class="send-panel" style="${locked ? 'border-color:#f0ad4e;background:#fffbf0' : ''}">
+      <div class="send-panel-label">
+        ${urgentLabel}
+        <span>${urgentNote}</span>
+      </div>
+      <div class="send-panel-btns">
+        <button class="btn-export"       onclick="downloadExport()">⬇️ .txt</button>
+        <button class="btn-export-email" onclick="openEmail()">📧 Gmail</button>
+        <button class="btn-export-clear" onclick="confirmClear()">🗑️ Limpar</button>
+      </div>
+    </div>`;
+  }
+
+  if (!records.length) {
+    html += `<div class="history-empty"><div class="icon">📖</div><p>Nenhum registro ainda.<br>Grave seu primeiro áudio!</p></div>`;
+  } else {
+    html += `<div class="days-counter">📅 <span>${dias}</span> dia${dias !== 1 ? 's' : ''} de ${MAX_DAYS} registrado${dias !== 1 ? 's' : ''}</div>`;
+    html += records.map(r => `
+      <div class="history-item" onclick="loadRecord(${r.id})">
+        <button class="btn-del" onclick="event.stopPropagation();deleteRecord(${r.id})">🗑</button>
+        <div class="history-date">${r.datetime}</div>
+        <div class="history-situation">${r.situation || '(sem situação)'}</div>
+        <div class="history-feeling">😔 ${r.feeling || '–'}</div>
+        <div class="history-anx">Ansiedade: ${r.anxiety1}/10 → ${r.anxiety2}/10</div>
+      </div>`).join('');
+  }
+
+  area.innerHTML = html;
+  applyLockUI();
+}
+
+function loadRecord(id) {
+  const r = records.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('f-datetime').value    = r.datetime;
+  document.getElementById('f-situation').value   = r.situation;
+  document.getElementById('f-thought').value     = r.thought;
+  document.getElementById('f-feeling').value     = r.feeling;
+  document.getElementById('f-anxiety1').value    = r.anxiety1;
+  document.getElementById('anx1-val').textContent= r.anxiety1;
+  document.getElementById('f-anxiety2').value    = r.anxiety2;
+  document.getElementById('anx2-val').textContent= r.anxiety2;
+  document.getElementById('f-reaction').value    = r.reaction;
+  document.getElementById('f-alt-thought').value = r.altThought;
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-form').classList.add('active');
+  document.querySelectorAll('.tab')[1].classList.add('active');
+  showToast('Registro carregado para edição');
+}
+
+function deleteRecord(id) {
+  if (!confirm('Deletar este registro?')) return;
+  records = records.filter(r => r.id !== id);
+  storageSave(records);
+  renderHistory();
+  showToast('Registro deletado');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+initRecognition();
+applyLockUI();
+
+// ── SERVICE WORKER REGISTRATION ───────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(r => console.log('SW registrado:', r.scope))
+      .catch(e => console.log('SW erro:', e));
+  });
+}
+</script>
+</body>
+</html>
