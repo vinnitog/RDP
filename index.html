@@ -333,6 +333,13 @@ function applyLockUI() {
 }
 
 // ── SPEECH ────────────────────────────────────────────────────
+// Abordagem para Chrome Mobile:
+// - continuous = false: cada sessão processa um bloco de fala e para sozinha
+// - interimResults = true: mostra texto em tempo real mas NÃO acumula no transcript
+// - sessionFinal: texto confirmado DA SESSÃO ATUAL, substituído (não somado) a cada resultado final
+// - transcript: só recebe sessionFinal quando a sessão termina (onend), evitando duplicatas
+let sessionFinal = ''; // texto final da sessão atual de recognition
+
 function initRecognition() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) {
@@ -342,31 +349,45 @@ function initRecognition() {
   }
   recognition = new SR();
   recognition.lang = 'pt-BR';
-  recognition.continuous = true;
-  recognition.interimResults = true;
+  recognition.continuous = false;   // uma sessão por vez — evita re-entrega de resultados
+  recognition.interimResults = true; // mostra texto enquanto fala, mas só para exibição
 
   recognition.onresult = (e) => {
-    // Usa e.resultIndex para processar SOMENTE os resultados novos desta entrega
-    // evitando que o Chrome Mobile re-entregue resultados anteriores acumulados
+    // sessionFinal: acumula APENAS os finais desta sessão (reset a cada nova sessão)
+    // interim: só para exibição em tempo real, nunca vai para transcript
     let interim = '';
-    for (let i = e.resultIndex; i < e.results.length; i++) {
+    sessionFinal = ''; // reseta e reconstrói do zero com todos os finais desta sessão
+    for (let i = 0; i < e.results.length; i++) {
       if (e.results[i].isFinal) {
-        transcript += e.results[i][0].transcript + ' ';
+        sessionFinal += e.results[i][0].transcript + ' ';
       } else {
         interim += e.results[i][0].transcript;
       }
     }
+    // Exibe: transcript já confirmado + final desta sessão + interim atual
     const d = document.getElementById('transcript-display');
     d.classList.remove('placeholder');
-    d.textContent = (transcript + interim).trim() || '...';
+    d.textContent = (transcript + sessionFinal + interim).trim() || '...';
   };
 
   recognition.onerror = (e) => {
     if (e.error === 'not-allowed') showToast('Permita o acesso ao microfone');
-    stopRecording();
+    else if (e.error === 'no-speech') {} // silêncio — ignora, onend vai reiniciar
+    else stopRecording();
   };
 
-  recognition.onend = () => { if (isRecording) recognition.start(); };
+  recognition.onend = () => {
+    // Consolida o texto final desta sessão no transcript global
+    if (sessionFinal.trim()) {
+      transcript += sessionFinal;
+      sessionFinal = '';
+    }
+    // Reinicia uma nova sessão se ainda estiver gravando
+    if (isRecording) {
+      try { recognition.start(); } catch(e) {}
+    }
+  };
+
   return true;
 }
 
@@ -378,12 +399,13 @@ function startRecording() {
   if (isLocked()) { showToast('Limite atingido. Envie o histórico primeiro.'); return; }
   if (!recognition && !initRecognition()) return;
   transcript = '';
+  sessionFinal = '';
   const d = document.getElementById('transcript-display');
   d.classList.add('placeholder');
   d.textContent = 'Ouvindo...';
 
   try { recognition.start(); }
-  catch(e) { recognition.stop(); setTimeout(() => recognition.start(), 200); }
+  catch(e) { setTimeout(() => { try { recognition.start(); } catch(e2) {} }, 300); }
 
   isRecording = true;
   seconds = 0;
@@ -411,13 +433,18 @@ function stopRecording() {
   document.getElementById('timer').classList.remove('recording');
   document.getElementById('status-dot').classList.add('off');
 
+  // Consolida qualquer sessionFinal pendente (caso onend não tenha disparado ainda)
+  if (sessionFinal.trim()) {
+    transcript += sessionFinal;
+    sessionFinal = '';
+  }
+
   // Fallback: pega texto visível se variável interna estiver vazia
   const displayed = document.getElementById('transcript-display').textContent.trim();
   const isPlaceholder = document.getElementById('transcript-display').classList.contains('placeholder');
   if (!transcript.trim() && displayed && !isPlaceholder) transcript = displayed;
 
-  // Deduplica: remove frases/segmentos repetidos consecutivos que o Chrome Mobile produz
-  transcript = deduplicateTranscript(transcript);
+  transcript = transcript.trim();
 
   if (transcript.trim()) {
     // Preenche data/hora automaticamente
