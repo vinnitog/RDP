@@ -13,45 +13,71 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+  /* ── TOKENS ── */
   :root {
-    --bg: #f5f0eb;
-    --surface: #fffdf9;
-    --surface2: #f0ebe3;
-    --accent: #7c6a8e;
-    --accent2: #c4a882;
-    --text: #2c2620;
-    --text-muted: #8a7a6e;
+    --bg:          #f5f0eb;
+    --surface:     #fffdf9;
+    --surface2:    #f0ebe3;
+    --accent:      #7c6a8e;
+    --accent2:     #c4a882;
+    --text:        #2c2620;
+    --text-muted:  #8a7a6e;
     --placeholder: #c8bdb5;
-    --border: #ddd5c8;
-    --success: #6a9c7a;
+    --border:      #ddd5c8;
+    --success:     #6a9c7a;
+  }
+  [data-theme="dark"] {
+    --bg:          #1a1720;
+    --surface:     #231f2c;
+    --surface2:    #2c2838;
+    --accent:      #a990c0;
+    --accent2:     #c4a882;
+    --text:        #ede7f6;
+    --text-muted:  #9e8fb0;
+    --placeholder: #5a5068;
+    --border:      #3d3550;
+    --success:     #6a9c7a;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'DM Sans', sans-serif;
+    font-size: 17px; /* base ligeiramente maior em todo o app */
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     padding: 0 0 80px;
+    transition: background 0.3s, color 0.3s;
   }
 
   /* ── HEADER ── */
   header {
     background: var(--accent);
-    padding: 22px 20px 18px;
-    text-align: center;
+    padding: 18px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
   }
-  header h1 { font-family: 'Lora', serif; font-size: 1.3rem; color: #ede7f6; letter-spacing: 0.03em; }
-  header p  { font-size: 0.72rem; color: #c9bdd8; margin-top: 3px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .header-title { text-align: center; flex: 1; }
+  .header-title h1 { font-family: 'Lora', serif; font-size: 1.2rem; color: #ede7f6; letter-spacing: 0.03em; }
+  .header-title p  { font-size: 0.72rem; color: #c9bdd8; margin-top: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .theme-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 1.3rem; padding: 4px 8px; border-radius: 8px;
+    color: #ede7f6; transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .theme-btn:active { background: rgba(255,255,255,0.15); }
 
   /* ── TABS ── */
   .tabs { display: flex; background: var(--surface2); border-bottom: 1px solid var(--border); }
-  .tab  { flex: 1; padding: 12px 8px; text-align: center; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .tab  { flex: 1; padding: 12px 8px; text-align: center; font-size: 0.88rem; font-weight: 500;
+          color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
   .tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
 
   .page { display: none; }
@@ -66,60 +92,39 @@
     border: 1px solid var(--border);
     padding: 16px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    transition: background 0.3s, border-color 0.3s;
   }
   .field-card label {
-    display: block;
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    font-weight: 500;
-    margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); font-weight: 500; margin-bottom: 10px;
   }
+  .char-count { font-size: 0.72rem; color: var(--placeholder); font-style: normal;
+                text-transform: none; letter-spacing: 0; }
+
   .field-card textarea {
     width: 100%; border: none; background: transparent;
-    font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem;
     color: var(--text); resize: none; outline: none; line-height: 1.6;
-    min-height: 64px;
+    min-height: 64px; overflow: hidden; /* auto-expand */
   }
   .field-card textarea::placeholder { color: var(--placeholder); font-style: italic; opacity: 1; }
 
-  /* ── DATETIME PICKER ── */
-  .datetime-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
+  /* ── DATETIME ── */
+  .datetime-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .datetime-row input[type="date"],
   .datetime-row input[type="time"] {
-    flex: 1;
-    min-width: 120px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface2);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.92rem;
-    color: var(--text);
-    padding: 9px 12px;
-    outline: none;
-    -webkit-appearance: none;
+    flex: 1; min-width: 110px;
+    border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface2); font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem; color: var(--text); padding: 9px 12px; outline: none;
+    -webkit-appearance: none; transition: border-color 0.2s, background 0.3s;
   }
-  .datetime-row input[type="date"]:focus,
-  .datetime-row input[type="time"]:focus {
-    border-color: var(--accent);
-  }
+  .datetime-row input:focus { border-color: var(--accent); }
   .btn-now {
-    padding: 9px 14px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s;
+    padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface2); font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+    color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: all 0.15s;
   }
   .btn-now:active { background: var(--accent); color: white; border-color: var(--accent); }
 
@@ -130,67 +135,153 @@
 
   /* ── FORM ACTIONS ── */
   .form-actions { display: flex; gap: 10px; padding: 0 20px 10px; }
-  .btn-save  { flex: 1; padding: 14px; border-radius: 14px; border: none; background: var(--accent); color: white; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.95rem; cursor: pointer; }
-  .btn-clear { padding: 14px 18px; border-radius: 14px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; cursor: pointer; }
+  .btn-save {
+    flex: 1; padding: 14px; border-radius: 14px; border: none;
+    background: var(--accent); color: white; font-family: 'DM Sans', sans-serif;
+    font-weight: 500; font-size: 0.95rem; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-save.saved {
+    background: var(--success);
+    animation: savePop 0.4s ease;
+  }
+  @keyframes savePop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+  .btn-clear {
+    padding: 14px 18px; border-radius: 14px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; cursor: pointer;
+  }
 
   /* ── LOCKED BANNER ── */
   .locked-banner {
-    margin: 24px 20px 0;
-    background: #fff3cd;
-    border: 1.5px solid #f0ad4e;
-    border-radius: 16px;
-    padding: 22px 20px;
-    text-align: center;
+    margin: 24px 20px 0; background: #fff3cd;
+    border: 1.5px solid #f0ad4e; border-radius: 16px;
+    padding: 22px 20px; text-align: center;
   }
+  [data-theme="dark"] .locked-banner { background: #3a2e0a; border-color: #c49a2a; }
   .locked-banner h3 { font-family: 'Lora', serif; font-size: 1rem; color: #7a5000; margin-bottom: 8px; }
-  .locked-banner p  { font-size: 0.82rem; color: #7a5000; line-height: 1.5; margin-bottom: 14px; }
-  .btn-go-history { padding: 11px 22px; border-radius: 12px; border: none; background: #f0ad4e; color: white; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem; cursor: pointer; }
+  [data-theme="dark"] .locked-banner h3 { color: #f0c040; }
+  .locked-banner p  { font-size: 0.9rem; color: #7a5000; line-height: 1.5; margin-bottom: 14px; }
+  [data-theme="dark"] .locked-banner p { color: #d4a820; }
+  .btn-go-history {
+    padding: 11px 22px; border-radius: 12px; border: none;
+    background: #f0ad4e; color: white; font-family: 'DM Sans', sans-serif;
+    font-weight: 500; font-size: 0.9rem; cursor: pointer;
+  }
 
   /* ── HISTORY ── */
   .history-area { padding: 20px; }
   .history-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); font-style: italic; }
   .history-empty .icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
 
-  .days-counter { font-size: 0.76rem; color: var(--text-muted); text-align: center; padding: 0 0 14px; }
-  .days-counter span { color: var(--accent); font-weight: 700; font-size: 0.88rem; }
+  .days-counter { font-size: 0.84rem; color: var(--text-muted); text-align: center; padding: 0 0 14px; }
+  .days-counter span { color: var(--accent); font-weight: 700; font-size: 0.96rem; }
 
-  .history-item { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); padding: 16px; margin-bottom: 12px; cursor: pointer; }
-  .history-date { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent2); margin-bottom: 6px; }
-  .history-situation { font-size: 0.9rem; font-weight: 500; margin-bottom: 4px; color: var(--text); line-height: 1.4; }
-  .history-feeling { font-size: 0.8rem; color: var(--text-muted); }
-  .history-anx { display: inline-block; margin-top: 8px; background: var(--surface2); color: var(--accent); font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
-  .btn-del { float: right; background: none; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; padding: 0 0 0 10px; }
+  /* history item — expandable */
+  .history-item {
+    background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
+    margin-bottom: 12px; overflow: hidden; transition: background 0.3s, border-color 0.3s;
+  }
+  .history-summary {
+    padding: 16px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;
+  }
+  .history-summary-row { display: flex; justify-content: space-between; align-items: flex-start; }
+  .history-date { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent2); }
+  .history-chevron { font-size: 0.8rem; color: var(--text-muted); transition: transform 0.25s; flex-shrink: 0; }
+  .history-item.open .history-chevron { transform: rotate(180deg); }
+  .history-situation { font-size: 1rem; font-weight: 500; color: var(--text); line-height: 1.4; }
+  .history-feeling   { font-size: 0.88rem; color: var(--text-muted); }
+  .history-anx {
+    display: inline-block; margin-top: 6px; background: var(--surface2);
+    color: var(--accent); font-size: 0.8rem; padding: 3px 10px;
+    border-radius: 20px; font-weight: 500;
+  }
+
+  /* expanded detail */
+  .history-detail {
+    display: none; padding: 0 16px 16px; border-top: 1px solid var(--border);
+    flex-direction: column; gap: 10px;
+  }
+  .history-item.open .history-detail { display: flex; }
+  .detail-row label {
+    display: block; font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--accent); font-weight: 500; margin-bottom: 3px;
+    margin-top: 10px;
+  }
+  .detail-row p { font-size: 0.96rem; line-height: 1.55; color: var(--text); }
+  .detail-actions { display: flex; gap: 8px; margin-top: 6px; }
+  .btn-edit { flex: 1; padding: 9px; border-radius: 10px; border: 1px solid var(--border);
+              background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+              font-size: 0.88rem; cursor: pointer; }
+  .btn-del  { flex: 1; padding: 9px; border-radius: 10px; border: none;
+              background: #fdecea; color: #c0393b; font-family: 'DM Sans', sans-serif;
+              font-size: 0.88rem; cursor: pointer; }
+  [data-theme="dark"] .btn-del { background: #3a1515; color: #e07070; }
+
+  /* ── CHART ── */
+  .chart-card {
+    background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
+    padding: 16px; margin-bottom: 14px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    max-width: 600px; margin-left: auto; margin-right: auto;
+  }
+  .chart-title {
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); font-weight: 500; margin-bottom: 12px;
+  }
+  .chart-wrap { position: relative; max-height: 160px; overflow: hidden; }
+  .chart-wrap svg { max-height: 160px; }
+  canvas { width: 100% !important; }
+  .chart-legend {
+    display: flex; gap: 16px; margin-top: 10px; justify-content: center;
+    font-size: 0.72rem; color: var(--text-muted);
+  }
+  .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
 
   /* ── SEND PANEL ── */
   .send-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 14px 16px; margin-bottom: 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap; transition: background 0.3s;
   }
-  .send-panel-label { font-size: 0.78rem; color: var(--text-muted); flex: 1; min-width: 100px; }
-  .send-panel-label strong { display: block; color: var(--text); font-size: 0.86rem; margin-bottom: 2px; }
+  .send-panel-label { font-size: 0.86rem; color: var(--text-muted); flex: 1; min-width: 100px; }
+  .send-panel-label strong { display: block; color: var(--text); font-size: 0.94rem; margin-bottom: 2px; }
   .send-panel-btns { display: flex; gap: 7px; flex-wrap: wrap; }
-  .btn-export       { padding: 8px 13px; border-radius: 10px; border: none; background: var(--success); color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; white-space: nowrap; }
-  .btn-export-email { padding: 8px 13px; border-radius: 10px; border: none; background: var(--accent); color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; white-space: nowrap; }
-  .btn-export-clear { padding: 8px 13px; border-radius: 10px; border: 1px solid #bbb; background: transparent; color: #666; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
+  .btn-export       { padding: 8px 13px; border-radius: 10px; border: none; background: var(--success);
+                      color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+                      font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .btn-export-email { padding: 8px 13px; border-radius: 10px; border: none; background: var(--accent);
+                      color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+                      font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .btn-export-clear { padding: 8px 13px; border-radius: 10px; border: 1px solid var(--border);
+                      background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+                      font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
 
   /* ── TOAST ── */
-  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; opacity: 0; transition: all 0.3s; z-index: 200; white-space: nowrap; }
+  .toast {
+    position: fixed; bottom: 90px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text); color: var(--bg);
+    padding: 10px 20px; border-radius: 30px; font-size: 0.85rem;
+    opacity: 0; transition: all 0.3s; z-index: 200; white-space: nowrap;
+  }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🧠 Registro de Pensamentos</h1>
-  <p>Terapia Cognitivo-Comportamental</p>
+  <div style="width:40px"></div>
+  <div class="header-title">
+    <h1>🧠 Registro de Pensamentos</h1>
+    <p>Terapia Cognitivo-Comportamental</p>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" title="Alternar tema">🌙</button>
 </header>
 
 <div class="tabs">
@@ -201,7 +292,6 @@
 <!-- FORM -->
 <div class="page active" id="page-form">
 
-  <!-- Locked banner -->
   <div id="form-locked" class="locked-banner" style="display:none">
     <h3>🔒 Limite de 10 dias atingido</h3>
     <p>Você não pode salvar novos registros até enviar o histórico e limpar o ciclo.</p>
@@ -211,7 +301,6 @@
   <div id="form-content">
     <div class="form-area">
 
-      <!-- Data / Hora -->
       <div class="field-card">
         <label>📅 Data / Hora</label>
         <div class="datetime-row">
@@ -221,25 +310,24 @@
         </div>
       </div>
 
-      <!-- Situação -->
       <div class="field-card">
-        <label>📍 Situação</label>
-        <textarea id="f-situation" placeholder="onde você estava, o que aconteceu, com quem..."></textarea>
+        <label>📍 Situação <span class="char-count" id="cc-situation">0</span></label>
+        <textarea id="f-situation" placeholder="onde você estava, o que aconteceu, com quem..."
+          oninput="autoResize(this);updateCount('f-situation','cc-situation')"></textarea>
       </div>
 
-      <!-- Pensamento Automático -->
       <div class="field-card">
-        <label>💭 Pensamento Automático</label>
-        <textarea id="f-thought" placeholder="o que passou pela sua cabeça naquele momento..."></textarea>
+        <label>💭 Pensamento Automático <span class="char-count" id="cc-thought">0</span></label>
+        <textarea id="f-thought" placeholder="o que passou pela sua cabeça naquele momento..."
+          oninput="autoResize(this);updateCount('f-thought','cc-thought')"></textarea>
       </div>
 
-      <!-- Sentimento -->
       <div class="field-card">
-        <label>❤️ Sentimento</label>
-        <textarea id="f-feeling" placeholder="que emoção você sentiu — ansiedade, tristeza, raiva..."></textarea>
+        <label>❤️ Sentimento <span class="char-count" id="cc-feeling">0</span></label>
+        <textarea id="f-feeling" placeholder="que emoção você sentiu — ansiedade, tristeza, raiva..."
+          oninput="autoResize(this);updateCount('f-feeling','cc-feeling')"></textarea>
       </div>
 
-      <!-- Ansiedade inicial -->
       <div class="field-card">
         <label>📊 Grau de Ansiedade Inicial (0–10)</label>
         <div class="slider-row">
@@ -249,19 +337,18 @@
         </div>
       </div>
 
-      <!-- Reação -->
       <div class="field-card">
-        <label>⚡ Reação / Comportamento</label>
-        <textarea id="f-reaction" placeholder="como você reagiu, o que fez..."></textarea>
+        <label>⚡ Reação / Comportamento <span class="char-count" id="cc-reaction">0</span></label>
+        <textarea id="f-reaction" placeholder="como você reagiu, o que fez..."
+          oninput="autoResize(this);updateCount('f-reaction','cc-reaction')"></textarea>
       </div>
 
-      <!-- Pensamento Alternativo -->
       <div class="field-card">
-        <label>🌱 Pensamento Alternativo</label>
-        <textarea id="f-alt-thought" placeholder="uma forma mais equilibrada de ver a situação..."></textarea>
+        <label>🌱 Pensamento Alternativo <span class="char-count" id="cc-alt">0</span></label>
+        <textarea id="f-alt-thought" placeholder="uma forma mais equilibrada de ver a situação..."
+          oninput="autoResize(this);updateCount('f-alt-thought','cc-alt')"></textarea>
       </div>
 
-      <!-- Ansiedade final -->
       <div class="field-card">
         <label>📊 Grau de Ansiedade Final (0–10)</label>
         <div class="slider-row">
@@ -274,10 +361,9 @@
     </div>
     <div class="form-actions">
       <button class="btn-clear" onclick="clearForm()">🗑️ Limpar</button>
-      <button class="btn-save"  onclick="saveRecord()">💾 Salvar Registro</button>
+      <button class="btn-save" id="btn-save" onclick="saveRecord()">💾 Salvar Registro</button>
     </div>
   </div>
-
 </div>
 
 <!-- HISTORY -->
@@ -292,15 +378,41 @@ const EMAIL_DEST = 'vinnitog@gmail.com';
 const MAX_DAYS   = 10;
 
 let records = [];
-try { records = JSON.parse(localStorage.getItem('rp_records') || '[]'); } catch(e) { records = []; }
+try { records = JSON.parse(localStorage.getItem('rp_records') || '[]'); } catch(e) {}
+let editingId = null; // null = novo registro, número = editando existente
 
 function storageSave(d) { try { localStorage.setItem('rp_records', JSON.stringify(d)); } catch(e) {} }
 
-// ── INIT DATE ──────────────────────────────────────────────────
+// ── THEME ──────────────────────────────────────────────────────
+let darkMode = localStorage.getItem('rp_dark') === '1';
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : '');
+  document.getElementById('theme-btn').textContent = darkMode ? '☀️' : '🌙';
+}
+function toggleTheme() {
+  darkMode = !darkMode;
+  localStorage.setItem('rp_dark', darkMode ? '1' : '0');
+  applyTheme();
+}
+applyTheme();
+
+// ── AUTO-RESIZE TEXTAREA ───────────────────────────────────────
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+function updateCount(fieldId, countId) {
+  const len = document.getElementById(fieldId).value.length;
+  document.getElementById(countId).textContent = len > 0 ? len + ' car.' : '';
+}
+// Resize all textareas on load (when loading a record)
+function resizeAll() {
+  document.querySelectorAll('.field-card textarea').forEach(autoResize);
+}
+
+// ── DATE ──────────────────────────────────────────────────────
 function setNow() {
   const now = new Date();
-  // Usa getFullYear/Month/Date (locais) em vez de toISOString() (UTC)
-  // para evitar que o fuso UTC-3 de Brasília avance o dia erroneamente
   const y  = now.getFullYear();
   const mo = String(now.getMonth() + 1).padStart(2, '0');
   const d  = String(now.getDate()).padStart(2, '0');
@@ -309,7 +421,6 @@ function setNow() {
   document.getElementById('f-date').value = y + '-' + mo + '-' + d;
   document.getElementById('f-time').value = hh + ':' + mm;
 }
-// Pre-fill date/time on load
 setNow();
 
 // ── TABS ──────────────────────────────────────────────────────
@@ -321,7 +432,6 @@ function showTab(name, el) {
   if (name === 'history') renderHistory();
   if (name === 'form') applyLockUI();
 }
-
 function goHistory() {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -344,10 +454,20 @@ function applyLockUI() {
 // ── FORM ──────────────────────────────────────────────────────
 function clearForm() {
   setNow();
-  ['f-situation','f-thought','f-feeling','f-reaction','f-alt-thought']
-    .forEach(id => { document.getElementById(id).value = ''; });
+  editingId = null;
+  const fields = ['f-situation','f-thought','f-feeling','f-reaction','f-alt-thought'];
+  const counts = ['cc-situation','cc-thought','cc-feeling','cc-reaction','cc-alt'];
+  fields.forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.value = '';
+    el.style.height = '';
+    document.getElementById(counts[i]).textContent = '';
+  });
   document.getElementById('f-anxiety1').value = 0; document.getElementById('anx1-val').textContent = '0';
   document.getElementById('f-anxiety2').value = 0; document.getElementById('anx2-val').textContent = '0';
+  const btn = document.getElementById('btn-save');
+  btn.textContent = '💾 Salvar Registro';
+  btn.classList.remove('saved');
 }
 
 function getDatetimeDisplay() {
@@ -355,34 +475,49 @@ function getDatetimeDisplay() {
   const t = document.getElementById('f-time').value;
   if (!d) return new Date().toLocaleString('pt-BR');
   const [y, m, dd] = d.split('-');
-  return `${dd}/${m}/${y}${t ? ', ' + t : ''}`;
+  return dd + '/' + m + '/' + y + (t ? ', ' + t : '');
 }
 
 function saveRecord() {
-  if (isLocked()) { showToast('Limite atingido. Envie o histórico primeiro.'); return; }
+  if (isLocked() && !editingId) { showToast('Limite atingido. Envie o histórico primeiro.'); return; }
 
-  const rec = {
-    id:         Date.now(),
+  const data = {
     datetime:   getDatetimeDisplay(),
     dateKey:    document.getElementById('f-date').value || new Date().toLocaleDateString('pt-BR'),
     situation:  document.getElementById('f-situation').value.trim(),
     thought:    document.getElementById('f-thought').value.trim(),
     feeling:    document.getElementById('f-feeling').value.trim(),
-    anxiety1:   document.getElementById('f-anxiety1').value,
+    anxiety1:   +document.getElementById('f-anxiety1').value,
     reaction:   document.getElementById('f-reaction').value.trim(),
     altThought: document.getElementById('f-alt-thought').value.trim(),
-    anxiety2:   document.getElementById('f-anxiety2').value,
+    anxiety2:   +document.getElementById('f-anxiety2').value,
   };
 
-  if (!rec.situation && !rec.thought && !rec.feeling) {
+  if (!data.situation && !data.thought && !data.feeling) {
     showToast('Preencha pelo menos situação, pensamento ou sentimento'); return;
   }
 
-  records.unshift(rec);
+  if (editingId) {
+    // Atualiza registro existente, preservando o id original
+    const idx = records.findIndex(r => r.id === editingId);
+    if (idx !== -1) records[idx] = { ...records[idx], ...data };
+    editingId = null;
+  } else {
+    // Novo registro
+    records.unshift({ id: Date.now(), ...data });
+  }
+
   storageSave(records);
+
+  // Animação do botão salvar
+  const btn = document.getElementById('btn-save');
+  btn.textContent = '✅ Salvo!';
+  btn.classList.add('saved');
+  setTimeout(() => { btn.textContent = '💾 Salvar Registro'; btn.classList.remove('saved'); }, 1800);
+
   clearForm();
   showToast('Registro salvo! 💜');
-  setTimeout(() => goHistory(), 600);
+  setTimeout(() => goHistory(), 1000);
 }
 
 // ── EXPORT ────────────────────────────────────────────────────
@@ -394,44 +529,138 @@ function buildExportText() {
     '='.repeat(50), ''
   ];
   records.forEach((r, i) => {
-    lines.push(`REGISTRO ${i + 1} — ${r.datetime}`);
+    lines.push('REGISTRO ' + (i+1) + ' — ' + r.datetime);
     lines.push('-'.repeat(40));
-    if (r.situation)   lines.push(`Situação:               ${r.situation}`);
-    if (r.thought)     lines.push(`Pensamento automático:  ${r.thought}`);
-    if (r.feeling)     lines.push(`Sentimento:             ${r.feeling}`);
-    lines.push(         `Ansiedade inicial:      ${r.anxiety1}/10`);
-    if (r.reaction)    lines.push(`Reação:                 ${r.reaction}`);
-    if (r.altThought)  lines.push(`Pensamento alternativo: ${r.altThought}`);
-    lines.push(         `Ansiedade final:        ${r.anxiety2}/10`);
+    if (r.situation)   lines.push('Situação:               ' + r.situation);
+    if (r.thought)     lines.push('Pensamento automático:  ' + r.thought);
+    if (r.feeling)     lines.push('Sentimento:             ' + r.feeling);
+    lines.push(         'Ansiedade inicial:      ' + r.anxiety1 + '/10');
+    if (r.reaction)    lines.push('Reação:                 ' + r.reaction);
+    if (r.altThought)  lines.push('Pensamento alternativo: ' + r.altThought);
+    lines.push(         'Ansiedade final:        ' + r.anxiety2 + '/10');
     lines.push('');
   });
   return lines.join('\n');
 }
-
 function downloadExport() {
-  const blob = new Blob([buildExportText()], {type: 'text/plain;charset=utf-8'});
+  const blob = new Blob([buildExportText()], {type:'text/plain;charset=utf-8'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href = url;
-  a.download = `registro-pensamentos-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.txt`;
-  a.click();
-  URL.revokeObjectURL(url);
+  a.download = 'registro-pensamentos-' + new Date().toLocaleDateString('pt-BR').replace(/\//g,'-') + '.txt';
+  a.click(); URL.revokeObjectURL(url);
   showToast('Arquivo baixado! ⬇️');
 }
-
 function openEmail() {
-  const subject = encodeURIComponent('Registro de Pensamentos TCC — ' + new Date().toLocaleDateString('pt-BR'));
-  const body    = encodeURIComponent(buildExportText());
-  window.open(`https://mail.google.com/mail/?view=cm&to=${EMAIL_DEST}&su=${subject}&body=${body}`, '_blank');
+  const s = encodeURIComponent('Registro de Pensamentos TCC — ' + new Date().toLocaleDateString('pt-BR'));
+  const b = encodeURIComponent(buildExportText());
+  window.open('https://mail.google.com/mail/?view=cm&to=' + EMAIL_DEST + '&su=' + s + '&body=' + b, '_blank');
 }
-
 function confirmClear() {
-  if (confirm('Histórico exportado?\n\nAo confirmar, todos os registros serão apagados e um novo ciclo começará.')) {
-    records = [];
-    storageSave(records);
-    renderHistory();
+  if (confirm('Histórico exportado?\n\nTodos os registros serão apagados e um novo ciclo começará.')) {
+    records = []; storageSave(records); renderHistory();
     showToast('Histórico limpo! Novo ciclo iniciado ✨');
   }
+}
+
+// ── CHART ─────────────────────────────────────────────────────
+function renderChart() {
+  if (records.length < 2) return '';
+
+  const ordered = [...records].reverse().slice(-10); // últimos 10, cronológico
+  const n = ordered.length;
+  const a1vals = ordered.map(r => +r.anxiety1);
+  const a2vals = ordered.map(r => +r.anxiety2);
+  const labels = ordered.map(r => r.datetime.split(',')[0].trim());
+
+  const totalImproved = ordered.filter(r => +r.anxiety2 < +r.anxiety1).length;
+  const totalWorse    = ordered.filter(r => +r.anxiety2 > +r.anxiety1).length;
+  const totalSame     = n - totalImproved - totalWorse;
+  const summaryColor  = totalImproved >= totalWorse ? '#6a9c7a' : '#e07070';
+  const summaryMsg    = totalImproved > totalWorse
+    ? '📉 Na maioria das reflexões sua ansiedade reduziu'
+    : totalWorse > totalImproved
+    ? '📈 Na maioria das reflexões sua ansiedade aumentou'
+    : '➡️ Sua ansiedade manteve-se estável nas reflexões';
+
+  // SVG dimensions
+  const W = 500, H = 180, PL = 24, PR = 20, PT = 16, PB = 32;
+  const iW = W - PL - PR, iH = H - PT - PB;
+  const xStep = n > 1 ? iW / (n - 1) : iW / 2;
+  const toX = i => PL + (n > 1 ? i * xStep : iW / 2);
+  const toY = v => PT + iH - (v / 10) * iH;
+
+  // Grid lines + Y labels
+  let svg = '';
+  [0, 5, 10].forEach(v => {
+    const y = toY(v).toFixed(1);
+    svg += '<line x1="' + PL + '" y1="' + y + '" x2="' + (W-PR) + '" y2="' + y
+         + '" stroke="var(--border)" stroke-width="1" stroke-dasharray="' + (v===5?'4,3':'') + '"/>';
+    svg += '<text x="' + (PL-4) + '" y="' + (parseFloat(y)+4) + '" text-anchor="end" font-size="11" fill="var(--text-muted)">' + v + '</text>';
+  });
+
+  // Shaded area between lines
+  const areaPoints1 = a1vals.map((v,i) => toX(i).toFixed(1)+','+toY(v).toFixed(1)).join(' ');
+  const areaPoints2 = [...a2vals].reverse().map((v,i) => toX(n-1-i).toFixed(1)+','+toY(v).toFixed(1)).join(' ');
+  svg += '<polygon points="' + areaPoints1 + ' ' + areaPoints2
+       + '" fill="rgba(124,106,142,0.08)"/>';
+
+  // Lines
+  const path = (vals, color, dash) => {
+    const d = vals.map((v,i) => (i===0?'M':'L') + toX(i).toFixed(1) + ',' + toY(v).toFixed(1)).join(' ');
+    return '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="2.5"'
+         + ' stroke-linejoin="round" stroke-linecap="round"'
+         + (dash ? ' stroke-dasharray="5,3"' : '') + '/>';
+  };
+  svg += path(a1vals, '#e07070', false);
+  svg += path(a2vals, '#7c6a8e', true);
+
+  // Dots + value labels
+  const dots = (vals, color) => vals.map((v, i) => {
+    const x = toX(i).toFixed(1), y = toY(v).toFixed(1);
+    const above = v < 8; // label above or below dot
+    const ly = above ? (parseFloat(y) - 7) : (parseFloat(y) + 14);
+    return '<circle cx="' + x + '" cy="' + y + '" r="4.5" fill="' + color + '" stroke="var(--surface)" stroke-width="1.5"/>'
+         + '<text x="' + x + '" y="' + ly + '" text-anchor="middle" font-size="10" font-weight="600" fill="' + color + '">' + v + '</text>';
+  }).join('');
+  svg += dots(a1vals, '#e07070');
+  svg += dots(a2vals, '#7c6a8e');
+
+  // Delta arrows between paired dots
+  ordered.forEach((r, i) => {
+    const a1 = +r.anxiety1, a2 = +r.anxiety2;
+    if (a1 === a2) return;
+    const improved = a2 < a1;
+    const col = improved ? '#6a9c7a' : '#e07070';
+    const x = toX(i).toFixed(1);
+    const y1 = toY(a1).toFixed(1), y2 = toY(a2).toFixed(1);
+    svg += '<line x1="' + x + '" y1="' + y1 + '" x2="' + x + '" y2="' + y2
+         + '" stroke="' + col + '" stroke-width="1.2" stroke-dasharray="2,2" opacity="0.6"/>';
+  });
+
+  // X axis date labels
+  const xIdxs = n <= 4 ? [...Array(n).keys()] : [0, Math.floor((n-1)/2), n-1];
+  xIdxs.forEach(i => {
+    svg += '<text x="' + toX(i).toFixed(1) + '" y="' + (H-6) + '" text-anchor="middle" font-size="10" fill="var(--text-muted)">'
+         + labels[i] + '</text>';
+  });
+
+  const svgEl = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg"'
+    + ' preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">'
+    + svg + '</svg>';
+
+  return '<div class="chart-card">'
+    + '<div class="chart-title">📊 Evolução da Ansiedade</div>'
+    + '<div class="chart-summary" style="color:' + summaryColor + '">' + summaryMsg + '</div>'
+    + '<div class="chart-svg-wrap">' + svgEl + '</div>'
+    + '<div class="chart-stats">'
+    + '<span><span class="legend-dot" style="background:#e07070"></span>Inicial</span>'
+    + '<span><span class="legend-dot" style="background:#7c6a8e;border: 2px dashed #7c6a8e;background:none"></span>Final</span>'
+    + '<span style="color:#6a9c7a;margin-left:8px">▼ ' + totalImproved + ' melhoraram</span>'
+    + '<span style="color:#e07070">▲ ' + totalWorse + ' pioraram</span>'
+    + (totalSame ? '<span style="color:var(--text-muted)">= ' + totalSame + ' igual</span>' : '')
+    + '</div>'
+    + '</div>';
 }
 
 // ── HISTORY ───────────────────────────────────────────────────
@@ -443,65 +672,89 @@ function renderHistory() {
 
   if (records.length > 0) {
     const urgentLabel = locked
-      ? `<strong style="color:#c0393b">🔒 Limite atingido — envie e limpe para continuar</strong>`
-      : `<strong>Enviar histórico</strong>`;
+      ? '<strong style="color:#c0393b">🔒 Limite atingido — envie e limpe para continuar</strong>'
+      : '<strong>Enviar histórico</strong>';
     const urgentNote = locked
-      ? `Você atingiu ${MAX_DAYS} dias. <b>Novos registros estão bloqueados</b> até enviar e limpar.`
-      : `Envie a qualquer momento e limpe para começar um novo ciclo.`;
-    html += `
-    <div class="send-panel" style="${locked ? 'border-color:#f0ad4e;background:#fffbf0' : ''}">
-      <div class="send-panel-label">${urgentLabel}<span>${urgentNote}</span></div>
-      <div class="send-panel-btns">
-        <button class="btn-export"       onclick="downloadExport()">⬇️ .txt</button>
-        <button class="btn-export-email" onclick="openEmail()">📧 Gmail</button>
-        <button class="btn-export-clear" onclick="confirmClear()">🗑️ Limpar</button>
-      </div>
-    </div>`;
+      ? 'Você atingiu ' + MAX_DAYS + ' dias. <b>Novos registros estão bloqueados</b> até enviar e limpar.'
+      : 'Envie a qualquer momento e limpe para começar um novo ciclo.';
+    html += '<div class="send-panel" style="' + (locked ? 'border-color:#f0ad4e;background:#fffbf0' : '') + '">'
+      + '<div class="send-panel-label">' + urgentLabel + '<span>' + urgentNote + '</span></div>'
+      + '<div class="send-panel-btns">'
+      + '<button class="btn-export"       onclick="downloadExport()">⬇️ .txt</button>'
+      + '<button class="btn-export-email" onclick="openEmail()">📧 Gmail</button>'
+      + '<button class="btn-export-clear" onclick="confirmClear()">🗑️ Limpar</button>'
+      + '</div></div>';
   }
 
+  // Chart
+  html += renderChart();
+
   if (!records.length) {
-    html += `<div class="history-empty"><div class="icon">📖</div><p>Nenhum registro ainda.<br>Preencha o formulário!</p></div>`;
+    html += '<div class="history-empty"><div class="icon">📖</div><p>Nenhum registro ainda.<br>Preencha o formulário!</p></div>';
   } else {
-    html += `<div class="days-counter">📅 <span>${dias}</span> dia${dias!==1?'s':''} de ${MAX_DAYS}</div>`;
-    html += records.map(r => `
-      <div class="history-item" onclick="loadRecord(${r.id})">
-        <button class="btn-del" onclick="event.stopPropagation();deleteRecord(${r.id})">🗑</button>
-        <div class="history-date">${r.datetime}</div>
-        <div class="history-situation">${r.situation || '(sem situação)'}</div>
-        <div class="history-feeling">😔 ${r.feeling || '–'}</div>
-        <div class="history-anx">Ansiedade: ${r.anxiety1}/10 → ${r.anxiety2}/10</div>
-      </div>`).join('');
+    html += '<div class="days-counter">📅 <span>' + dias + '</span> dia' + (dias!==1?'s':'') + ' de ' + MAX_DAYS + '</div>';
+    html += records.map(r => {
+      const safe = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return '<div class="history-item" id="item-' + r.id + '">'
+        + '<div class="history-summary" onclick="toggleItem(' + r.id + ')">'
+        + '  <div class="history-summary-row">'
+        + '    <div class="history-date">' + safe(r.datetime) + '</div>'
+        + '    <span class="history-chevron">▾</span>'
+        + '  </div>'
+        + '  <div class="history-situation">' + safe(r.situation || '(sem situação)') + '</div>'
+        + '  <div class="history-feeling">😔 ' + safe(r.feeling || '–') + '</div>'
+        + '  <div class="history-anx">Ansiedade: ' + r.anxiety1 + '/10 → ' + r.anxiety2 + '/10</div>'
+        + '</div>'
+        + '<div class="history-detail">'
+        + (r.thought    ? '<div class="detail-row"><label>💭 Pensamento Automático</label><p>' + safe(r.thought) + '</p></div>' : '')
+        + (r.reaction   ? '<div class="detail-row"><label>⚡ Reação</label><p>' + safe(r.reaction) + '</p></div>' : '')
+        + (r.altThought ? '<div class="detail-row"><label>🌱 Pensamento Alternativo</label><p>' + safe(r.altThought) + '</p></div>' : '')
+        + '<div class="detail-actions">'
+        + '  <button class="btn-edit" onclick="loadRecord(' + r.id + ')">✏️ Editar</button>'
+        + '  <button class="btn-del"  onclick="deleteRecord(' + r.id + ')">🗑️ Deletar</button>'
+        + '</div></div></div>';
+    }).join('');
   }
 
   area.innerHTML = html;
   applyLockUI();
 }
 
+function toggleItem(id) {
+  document.getElementById('item-' + id).classList.toggle('open');
+}
+
 function loadRecord(id) {
   const r = records.find(x => x.id === id);
   if (!r) return;
-  // Parse date back to input format
   const parts = r.datetime.split(',')[0].trim().split('/');
-  if (parts.length === 3) {
-    document.getElementById('f-date').value = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-  }
-  const timePart = r.datetime.includes(',') ? r.datetime.split(',')[1].trim() : '';
-  document.getElementById('f-time').value = timePart;
-  document.getElementById('f-situation').value   = r.situation  || '';
-  document.getElementById('f-thought').value     = r.thought    || '';
-  document.getElementById('f-feeling').value     = r.feeling    || '';
-  document.getElementById('f-anxiety1').value    = r.anxiety1;
-  document.getElementById('anx1-val').textContent= r.anxiety1;
-  document.getElementById('f-anxiety2').value    = r.anxiety2;
-  document.getElementById('anx2-val').textContent= r.anxiety2;
-  document.getElementById('f-reaction').value    = r.reaction   || '';
-  document.getElementById('f-alt-thought').value = r.altThought || '';
+  if (parts.length === 3)
+    document.getElementById('f-date').value = parts[2] + '-' + parts[1].padStart(2,'0') + '-' + parts[0].padStart(2,'0');
+  document.getElementById('f-time').value = r.datetime.includes(',') ? r.datetime.split(',')[1].trim() : '';
+
+  const pairs = [
+    ['f-situation', 'cc-situation', r.situation],
+    ['f-thought',   'cc-thought',   r.thought],
+    ['f-feeling',   'cc-feeling',   r.feeling],
+    ['f-reaction',  'cc-reaction',  r.reaction],
+    ['f-alt-thought','cc-alt',      r.altThought],
+  ];
+  pairs.forEach(([fid, cid, val]) => {
+    const el = document.getElementById(fid);
+    el.value = val || '';
+    updateCount(fid, cid);
+  });
+  document.getElementById('f-anxiety1').value = r.anxiety1; document.getElementById('anx1-val').textContent = r.anxiety1;
+  document.getElementById('f-anxiety2').value = r.anxiety2; document.getElementById('anx2-val').textContent = r.anxiety2;
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-form').classList.add('active');
   document.querySelectorAll('.tab')[0].classList.add('active');
+  editingId = r.id;
+  document.getElementById('btn-save').textContent = '💾 Atualizar Registro';
   applyLockUI();
+  setTimeout(resizeAll, 50);
   showToast('Registro carregado para edição');
 }
 
@@ -521,12 +774,8 @@ function showToast(msg) {
 
 // ── INIT ──────────────────────────────────────────────────────
 applyLockUI();
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  });
-}
+if ('serviceWorker' in navigator)
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>
 </html>
