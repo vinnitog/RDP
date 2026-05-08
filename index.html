@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Reg. Pensamentos">
-<meta name="theme-color" content="#7c6a8e">
+<meta name="theme-color" content="#6b7c4a">
 <title>Registro de Pensamentos</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -15,28 +15,28 @@
 <style>
   /* ── TOKENS ── */
   :root {
-    --bg:          #f5f0eb;
-    --surface:     #fffdf9;
-    --surface2:    #f0ebe3;
-    --accent:      #7c6a8e;
-    --accent2:     #c4a882;
-    --text:        #2c2620;
-    --text-muted:  #8a7a6e;
-    --placeholder: #c8bdb5;
-    --border:      #ddd5c8;
-    --success:     #6a9c7a;
+    --bg:          #f8f6f0;
+    --surface:     #ffffff;
+    --surface2:    #f0ede6;
+    --accent:      #6b7c4a;
+    --accent2:     #8a9e60;
+    --text:        #1e1e1e;
+    --text-muted:  #6b7c4a;
+    --placeholder: #b0b8a0;
+    --border:      #d4d9c8;
+    --success:     #6b7c4a;
   }
   [data-theme="dark"] {
-    --bg:          #1a1720;
-    --surface:     #231f2c;
-    --surface2:    #2c2838;
-    --accent:      #a990c0;
-    --accent2:     #c4a882;
-    --text:        #ede7f6;
-    --text-muted:  #9e8fb0;
-    --placeholder: #5a5068;
-    --border:      #3d3550;
-    --success:     #6a9c7a;
+    --bg:          #000000;
+    --surface:     #0a0a0a;
+    --surface2:    #111111;
+    --accent:      #6b7c4a;
+    --accent2:     #6b7c4a;
+    --text:        #f0fdf4;
+    --text-muted:  #4d7a5a;
+    --placeholder: #2a4a32;
+    --border:      #163020;
+    --success:     #6b7c4a;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -53,7 +53,7 @@
 
   /* ── HEADER ── */
   header {
-    background: var(--accent);
+    background: #4a5535;
     padding: 18px 20px 14px;
     display: flex;
     align-items: center;
@@ -64,12 +64,12 @@
     box-shadow: 0 2px 12px rgba(0,0,0,0.18);
   }
   .header-title { text-align: center; flex: 1; }
-  .header-title h1 { font-family: 'Lora', serif; font-size: 1.2rem; color: #ede7f6; letter-spacing: 0.03em; }
-  .header-title p  { font-size: 0.72rem; color: #c9bdd8; margin-top: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .header-title h1 { font-family: 'Lora', serif; font-size: 1.2rem; color: #e8edda; letter-spacing: 0.03em; }
+  .header-title p  { font-size: 0.72rem; color: #b5c49a; margin-top: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
   .theme-btn {
     background: none; border: none; cursor: pointer;
     font-size: 1.3rem; padding: 4px 8px; border-radius: 8px;
-    color: #ede7f6; transition: background 0.2s;
+    color: #e8edda; transition: background 0.2s;
     flex-shrink: 0;
   }
   .theme-btn:active { background: rgba(255,255,255,0.15); }
@@ -142,7 +142,7 @@
     transition: transform 0.15s, box-shadow 0.15s;
   }
   .btn-save.saved {
-    background: var(--success);
+    background: var(--accent);
     animation: savePop 0.4s ease;
   }
   @keyframes savePop {
@@ -158,18 +158,18 @@
 
   /* ── LOCKED BANNER ── */
   .locked-banner {
-    margin: 24px 20px 0; background: #fff3cd;
-    border: 1.5px solid #f0ad4e; border-radius: 16px;
+    margin: 24px 20px 0; background: #eef0e8;
+    border: 1.5px solid #6b7c4a; border-radius: 16px;
     padding: 22px 20px; text-align: center;
   }
-  [data-theme="dark"] .locked-banner { background: #3a2e0a; border-color: #c49a2a; }
-  .locked-banner h3 { font-family: 'Lora', serif; font-size: 1rem; color: #7a5000; margin-bottom: 8px; }
-  [data-theme="dark"] .locked-banner h3 { color: #f0c040; }
-  .locked-banner p  { font-size: 0.9rem; color: #7a5000; line-height: 1.5; margin-bottom: 14px; }
-  [data-theme="dark"] .locked-banner p { color: #d4a820; }
+  [data-theme="dark"] .locked-banner { background: #2e3228; border-color: #8a9e60; }
+  .locked-banner h3 { font-family: 'Lora', serif; font-size: 1rem; color: #4a5535; margin-bottom: 8px; }
+  [data-theme="dark"] .locked-banner h3 { color: #b5c49a; }
+  .locked-banner p  { font-size: 0.9rem; color: #6b7c4a; line-height: 1.5; margin-bottom: 14px; }
+  [data-theme="dark"] .locked-banner p { color: #9aaa80; }
   .btn-go-history {
     padding: 11px 22px; border-radius: 12px; border: none;
-    background: #f0ad4e; color: white; font-family: 'DM Sans', sans-serif;
+    background: #6b7c4a; color: #ffffff; font-family: 'DM Sans', sans-serif;
     font-weight: 500; font-size: 0.9rem; cursor: pointer;
   }
 
@@ -218,29 +218,27 @@
               background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif;
               font-size: 0.88rem; cursor: pointer; }
   .btn-del  { flex: 1; padding: 9px; border-radius: 10px; border: none;
-              background: #fdecea; color: #c0393b; font-family: 'DM Sans', sans-serif;
+              background: #fdecea; color: #b94040; font-family: 'DM Sans', sans-serif;
               font-size: 0.88rem; cursor: pointer; }
-  [data-theme="dark"] .btn-del { background: #3a1515; color: #e07070; }
+  [data-theme="dark"] .btn-del { background: #3a2020; color: #e07070; }
 
   /* ── CHART ── */
   .chart-card {
     background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
     padding: 16px; margin-bottom: 14px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-    max-width: 600px; margin-left: auto; margin-right: auto;
   }
   .chart-title {
     font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--accent); font-weight: 500; margin-bottom: 12px;
+    color: var(--accent); font-weight: 500; margin-bottom: 6px;
   }
-  .chart-wrap { position: relative; max-height: 160px; overflow: hidden; }
-  .chart-wrap svg { max-height: 160px; }
-  canvas { width: 100% !important; }
-  .chart-legend {
-    display: flex; gap: 16px; margin-top: 10px; justify-content: center;
-    font-size: 0.72rem; color: var(--text-muted);
+  .chart-summary { font-size: 0.9rem; font-weight: 500; margin-bottom: 14px; line-height: 1.4; }
+  .chart-canvas-wrap { position: relative; width: 100%; height: 180px; }
+  .chart-stats {
+    display: flex; gap: 16px; margin-top: 12px; padding-top: 10px;
+    border-top: 1px solid var(--border); font-size: 0.84rem; font-weight: 500; flex-wrap: wrap;
   }
-  .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .legend-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
 
   /* ── SEND PANEL ── */
   .send-panel {
@@ -252,9 +250,7 @@
   .send-panel-label { font-size: 0.86rem; color: var(--text-muted); flex: 1; min-width: 100px; }
   .send-panel-label strong { display: block; color: var(--text); font-size: 0.94rem; margin-bottom: 2px; }
   .send-panel-btns { display: flex; gap: 7px; flex-wrap: wrap; }
-  .btn-export       { padding: 8px 13px; border-radius: 10px; border: none; background: var(--success);
-                      color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
-                      font-weight: 500; cursor: pointer; white-space: nowrap; }
+
   .btn-export-email { padding: 8px 13px; border-radius: 10px; border: none; background: var(--accent);
                       color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
                       font-weight: 500; cursor: pointer; white-space: nowrap; }
@@ -542,15 +538,7 @@ function buildExportText() {
   });
   return lines.join('\n');
 }
-function downloadExport() {
-  const blob = new Blob([buildExportText()], {type:'text/plain;charset=utf-8'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = 'registro-pensamentos-' + new Date().toLocaleDateString('pt-BR').replace(/\//g,'-') + '.txt';
-  a.click(); URL.revokeObjectURL(url);
-  showToast('Arquivo baixado! ⬇️');
-}
+
 function openEmail() {
   const s = encodeURIComponent('Registro de Pensamentos TCC — ' + new Date().toLocaleDateString('pt-BR'));
   const b = encodeURIComponent(buildExportText());
@@ -564,102 +552,73 @@ function confirmClear() {
 }
 
 // ── CHART ─────────────────────────────────────────────────────
+let _anxietyChart = null;
+
 function renderChart() {
   if (records.length < 2) return '';
 
-  const ordered = [...records].reverse().slice(-10); // últimos 10, cronológico
-  const n = ordered.length;
-  const a1vals = ordered.map(r => +r.anxiety1);
-  const a2vals = ordered.map(r => +r.anxiety2);
-  const labels = ordered.map(r => r.datetime.split(',')[0].trim());
+  const ordered = [...records].slice(0, 10).reverse(); // 10 mais recentes em ordem cronológica
+  const labels  = ordered.map(r => r.datetime.split(',')[0].trim());
+  const a2vals  = ordered.map(r => +r.anxiety2);
 
   const totalImproved = ordered.filter(r => +r.anxiety2 < +r.anxiety1).length;
   const totalWorse    = ordered.filter(r => +r.anxiety2 > +r.anxiety1).length;
-  const totalSame     = n - totalImproved - totalWorse;
-  const summaryColor  = totalImproved >= totalWorse ? '#6a9c7a' : '#e07070';
+  const totalSame     = ordered.length - totalImproved - totalWorse;
+  const summaryColor  = totalImproved >= totalWorse ? '#6b7c4a' : '#c0724a';
   const summaryMsg    = totalImproved > totalWorse
     ? '📉 Na maioria das reflexões sua ansiedade reduziu'
     : totalWorse > totalImproved
     ? '📈 Na maioria das reflexões sua ansiedade aumentou'
     : '➡️ Sua ansiedade manteve-se estável nas reflexões';
 
-  // SVG dimensions
-  const W = 500, H = 180, PL = 24, PR = 20, PT = 16, PB = 32;
-  const iW = W - PL - PR, iH = H - PT - PB;
-  const xStep = n > 1 ? iW / (n - 1) : iW / 2;
-  const toX = i => PL + (n > 1 ? i * xStep : iW / 2);
-  const toY = v => PT + iH - (v / 10) * iH;
+  const id = 'anxiety-chart-' + Date.now();
 
-  // Grid lines + Y labels
-  let svg = '';
-  [0, 5, 10].forEach(v => {
-    const y = toY(v).toFixed(1);
-    svg += '<line x1="' + PL + '" y1="' + y + '" x2="' + (W-PR) + '" y2="' + y
-         + '" stroke="var(--border)" stroke-width="1" stroke-dasharray="' + (v===5?'4,3':'') + '"/>';
-    svg += '<text x="' + (PL-4) + '" y="' + (parseFloat(y)+4) + '" text-anchor="end" font-size="11" fill="var(--text-muted)">' + v + '</text>';
-  });
+  // destroy previous chart instance if any
+  if (_anxietyChart) { try { _anxietyChart.destroy(); } catch(e) {} _anxietyChart = null; }
 
-  // Shaded area between lines
-  const areaPoints1 = a1vals.map((v,i) => toX(i).toFixed(1)+','+toY(v).toFixed(1)).join(' ');
-  const areaPoints2 = [...a2vals].reverse().map((v,i) => toX(n-1-i).toFixed(1)+','+toY(v).toFixed(1)).join(' ');
-  svg += '<polygon points="' + areaPoints1 + ' ' + areaPoints2
-       + '" fill="rgba(124,106,142,0.08)"/>';
-
-  // Lines
-  const path = (vals, color, dash) => {
-    const d = vals.map((v,i) => (i===0?'M':'L') + toX(i).toFixed(1) + ',' + toY(v).toFixed(1)).join(' ');
-    return '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="2.5"'
-         + ' stroke-linejoin="round" stroke-linecap="round"'
-         + (dash ? ' stroke-dasharray="5,3"' : '') + '/>';
-  };
-  svg += path(a1vals, '#e07070', false);
-  svg += path(a2vals, '#7c6a8e', true);
-
-  // Dots + value labels
-  const dots = (vals, color) => vals.map((v, i) => {
-    const x = toX(i).toFixed(1), y = toY(v).toFixed(1);
-    const above = v < 8; // label above or below dot
-    const ly = above ? (parseFloat(y) - 7) : (parseFloat(y) + 14);
-    return '<circle cx="' + x + '" cy="' + y + '" r="4.5" fill="' + color + '" stroke="var(--surface)" stroke-width="1.5"/>'
-         + '<text x="' + x + '" y="' + ly + '" text-anchor="middle" font-size="10" font-weight="600" fill="' + color + '">' + v + '</text>';
-  }).join('');
-  svg += dots(a1vals, '#e07070');
-  svg += dots(a2vals, '#7c6a8e');
-
-  // Delta arrows between paired dots
-  ordered.forEach((r, i) => {
-    const a1 = +r.anxiety1, a2 = +r.anxiety2;
-    if (a1 === a2) return;
-    const improved = a2 < a1;
-    const col = improved ? '#6a9c7a' : '#e07070';
-    const x = toX(i).toFixed(1);
-    const y1 = toY(a1).toFixed(1), y2 = toY(a2).toFixed(1);
-    svg += '<line x1="' + x + '" y1="' + y1 + '" x2="' + x + '" y2="' + y2
-         + '" stroke="' + col + '" stroke-width="1.2" stroke-dasharray="2,2" opacity="0.6"/>';
-  });
-
-  // X axis date labels
-  const xIdxs = n <= 4 ? [...Array(n).keys()] : [0, Math.floor((n-1)/2), n-1];
-  xIdxs.forEach(i => {
-    svg += '<text x="' + toX(i).toFixed(1) + '" y="' + (H-6) + '" text-anchor="middle" font-size="10" fill="var(--text-muted)">'
-         + labels[i] + '</text>';
-  });
-
-  const svgEl = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg"'
-    + ' preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">'
-    + svg + '</svg>';
+  setTimeout(() => {
+    const canvas = document.getElementById(id);
+    if (!canvas || !window.Chart) return;
+    _anxietyChart = new window.Chart(canvas, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Ansiedade final',
+          data: a2vals,
+          borderColor: '#6b7c4a',
+          backgroundColor: 'rgba(107,124,74,0.12)',
+          fill: true,
+          tension: 0.35,
+          pointBackgroundColor: '#6b7c4a',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            min: 0, max: 10,
+            ticks: { stepSize: 5, color: '#8a9e60', font: { size: 11 } },
+            grid: { color: 'rgba(138,158,96,0.15)' },
+          },
+          x: {
+            ticks: { color: '#8a9e60', font: { size: 11 }, maxRotation: 0 },
+            grid: { display: false },
+          }
+        }
+      }
+    });
+  }, 50);
 
   return '<div class="chart-card">'
     + '<div class="chart-title">📊 Evolução da Ansiedade</div>'
-    + '<div class="chart-summary" style="color:' + summaryColor + '">' + summaryMsg + '</div>'
-    + '<div class="chart-svg-wrap">' + svgEl + '</div>'
-    + '<div class="chart-stats">'
-    + '<span><span class="legend-dot" style="background:#e07070"></span>Inicial</span>'
-    + '<span><span class="legend-dot" style="background:#7c6a8e;border: 2px dashed #7c6a8e;background:none"></span>Final</span>'
-    + '<span style="color:#6a9c7a;margin-left:8px">▼ ' + totalImproved + ' melhoraram</span>'
-    + '<span style="color:#e07070">▲ ' + totalWorse + ' pioraram</span>'
-    + (totalSame ? '<span style="color:var(--text-muted)">= ' + totalSame + ' igual</span>' : '')
-    + '</div>'
+    + '<div class="chart-canvas-wrap"><canvas id="' + id + '" role="img" aria-label="Linha de evolução da ansiedade final ao longo dos registros"></canvas></div>'
     + '</div>';
 }
 
@@ -680,7 +639,6 @@ function renderHistory() {
     html += '<div class="send-panel" style="' + (locked ? 'border-color:#f0ad4e;background:#fffbf0' : '') + '">'
       + '<div class="send-panel-label">' + urgentLabel + '<span>' + urgentNote + '</span></div>'
       + '<div class="send-panel-btns">'
-      + '<button class="btn-export"       onclick="downloadExport()">⬇️ .txt</button>'
       + '<button class="btn-export-email" onclick="openEmail()">📧 Gmail</button>'
       + '<button class="btn-export-clear" onclick="confirmClear()">🗑️ Limpar</button>'
       + '</div></div>';
@@ -777,5 +735,6 @@ applyLockUI();
 if ('serviceWorker' in navigator)
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 </body>
 </html>
