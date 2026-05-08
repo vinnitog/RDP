@@ -64,7 +64,7 @@
     box-shadow: 0 2px 12px rgba(0,0,0,0.18);
   }
   .header-title { text-align: center; flex: 1; }
-  .header-title h1 { font-family: 'Lora', serif; font-size: 1.2rem; color: #e8edda; letter-spacing: 0.03em; }
+  .header-title h1 { font-family: 'Lora', serif; font-size: 1rem; color: #e8edda; letter-spacing: 0.02em; white-space: nowrap; }
   .header-title p  { font-size: 0.72rem; color: #b5c49a; margin-top: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
   .theme-btn {
     background: none; border: none; cursor: pointer;
@@ -114,12 +114,14 @@
   .datetime-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .datetime-row input[type="date"],
   .datetime-row input[type="time"] {
-    flex: 1; min-width: 110px;
+    flex: 1; min-width: 0;
     border: 1px solid var(--border); border-radius: 10px;
     background: var(--surface2); font-family: 'DM Sans', sans-serif;
-    font-size: 0.92rem; color: var(--text); padding: 9px 12px; outline: none;
+    font-size: 0.88rem; color: var(--text); padding: 9px 8px; outline: none;
     -webkit-appearance: none; transition: border-color 0.2s, background 0.3s;
+    width: 0; /* force flex to control width */
   }
+  .datetime-row input[type="date"] { flex: 2; } /* data precisa de mais espaço que hora */
   .datetime-row input:focus { border-color: var(--accent); }
   .btn-now {
     padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border);
@@ -401,6 +403,10 @@ function updateCount(fieldId, countId) {
   const len = document.getElementById(fieldId).value.length;
   document.getElementById(countId).textContent = len > 0 ? len + ' car.' : '';
 }
+function resetCounts() {
+  ['cc-situation','cc-thought','cc-feeling','cc-reaction','cc-alt']
+    .forEach(id => { document.getElementById(id).textContent = ''; });
+}
 // Resize all textareas on load (when loading a record)
 function resizeAll() {
   document.querySelectorAll('.field-card textarea').forEach(autoResize);
@@ -457,8 +463,8 @@ function clearForm() {
     const el = document.getElementById(id);
     el.value = '';
     el.style.height = '';
-    document.getElementById(counts[i]).textContent = '';
   });
+  resetCounts();
   document.getElementById('f-anxiety1').value = 0; document.getElementById('anx1-val').textContent = '0';
   document.getElementById('f-anxiety2').value = 0; document.getElementById('anx2-val').textContent = '0';
   const btn = document.getElementById('btn-save');
