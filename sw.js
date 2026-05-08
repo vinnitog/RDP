@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rdp-v3'; // ← incremente aqui a cada deploy com mudanças
+const CACHE_NAME = 'rdp-v1.4'; // ← incremente aqui a cada deploy com mudanças
 
 const ASSETS = [
   './',

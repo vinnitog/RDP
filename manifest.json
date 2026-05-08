@@ -1,12 +1,12 @@
 {
-  "name": "Registro de Pensamentos",
-  "short_name": "Reg. Pensamentos",
-  "description": "Exercício de Registro de Pensamentos para Terapia Cognitivo-Comportamental",
+  "name": "RDP",
+  "short_name": "RDP",
+  "description": "Registro de Pensamentos — Terapia Cognitivo-Comportamental",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f5f0eb",
-  "theme_color": "#7c6a8e",
+  "background_color": "#4a5535",
+  "theme_color": "#4a5535",
   "lang": "pt-BR",
   "icons": [
     {
