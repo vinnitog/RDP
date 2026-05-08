@@ -13,7 +13,6 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  /* ── TOKENS ── */
   :root {
     --bg:          #f8f6f0;
     --surface:     #ffffff;
@@ -51,7 +50,6 @@
     transition: background 0.3s, color 0.3s;
   }
 
-  /* ── HEADER ── */
   header {
     background: #4a5535;
     padding: 18px 20px 14px;
@@ -66,32 +64,21 @@
   .header-title { text-align: center; flex: 1; }
   .header-title h1 { font-family: 'Lora', serif; font-size: 1rem; color: #e8edda; letter-spacing: 0.02em; white-space: nowrap; }
   .header-title p  { font-size: 0.72rem; color: #b5c49a; margin-top: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
-  .theme-btn {
-    background: none; border: none; cursor: pointer;
-    font-size: 1.3rem; padding: 4px 8px; border-radius: 8px;
-    color: #e8edda; transition: background 0.2s;
-    flex-shrink: 0;
-  }
+  .theme-btn { background: none; border: none; cursor: pointer; font-size: 1.3rem; padding: 4px 8px; border-radius: 8px; color: #e8edda; transition: background 0.2s; flex-shrink: 0; }
   .theme-btn:active { background: rgba(255,255,255,0.15); }
 
-  /* ── TABS ── */
   .tabs { display: flex; background: var(--surface2); border-bottom: 1px solid var(--border); }
-  .tab  { flex: 1; padding: 12px 8px; text-align: center; font-size: 0.88rem; font-weight: 500;
-          color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .tab  { flex: 1; padding: 12px 8px; text-align: center; font-size: 0.88rem; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
   .tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
 
   .page { display: none; }
   .page.active { display: block; }
 
-  /* ── FORM ── */
   .form-area { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
 
   .field-card {
-    background: var(--surface);
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    padding: 16px;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
+    padding: 16px; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
     transition: background 0.3s, border-color 0.3s;
   }
   .field-card label {
@@ -99,165 +86,101 @@
     font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
     color: var(--accent); font-weight: 500; margin-bottom: 10px;
   }
-  .char-count { font-size: 0.72rem; color: var(--placeholder); font-style: normal;
-                text-transform: none; letter-spacing: 0; }
-
+  .char-count { font-size: 0.72rem; color: var(--placeholder); font-style: normal; text-transform: none; letter-spacing: 0; }
   .field-card textarea {
-    width: 100%; border: none; background: transparent;
-    font-family: 'DM Sans', sans-serif; font-size: 1rem;
-    color: var(--text); resize: none; outline: none; line-height: 1.6;
+    width: 100%; border: none; background: transparent; font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; color: var(--text); resize: none; outline: none; line-height: 1.6;
     min-height: 64px; overflow: hidden;
   }
   .field-card textarea::placeholder { color: var(--placeholder); font-style: italic; opacity: 1; }
 
-  /* ── DATETIME ── */
-  .datetime-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  /* DATETIME — flex-nowrap + explicit min-width on time prevents truncation */
+  .datetime-row { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; }
   .datetime-row input[type="date"],
   .datetime-row input[type="time"] {
-    flex: 1; min-width: 0;
     border: 1px solid var(--border); border-radius: 10px;
     background: var(--surface2); font-family: 'DM Sans', sans-serif;
     font-size: 0.88rem; color: var(--text); padding: 9px 8px; outline: none;
     -webkit-appearance: none; transition: border-color 0.2s, background 0.3s;
-    width: 0;
+    min-width: 0; overflow: hidden;
   }
-  .datetime-row input[type="date"] { flex: 2; }
+  .datetime-row input[type="date"] { flex: 3; }
+  .datetime-row input[type="time"] { flex: 2; min-width: 86px; }
   .datetime-row input:focus { border-color: var(--accent); }
   .btn-now {
-    padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border);
+    flex-shrink: 0; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--border);
     background: var(--surface2); font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
     color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: all 0.15s;
   }
   .btn-now:active { background: var(--accent); color: white; border-color: var(--accent); }
 
-  /* ── SLIDER ── */
   .slider-row { display: flex; align-items: center; gap: 12px; }
   .slider-row input[type=range] { flex: 1; accent-color: var(--accent); height: 6px; cursor: pointer; }
   .slider-val { font-family: 'Lora', serif; font-size: 1.3rem; color: var(--accent); min-width: 30px; text-align: right; }
 
-  /* ── FORM ACTIONS ── */
   .form-actions { display: flex; gap: 10px; padding: 0 20px 10px; }
   .btn-save {
     flex: 1; padding: 14px; border-radius: 14px; border: none;
     background: var(--accent); color: white; font-family: 'DM Sans', sans-serif;
-    font-weight: 500; font-size: 0.95rem; cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
+    font-weight: 500; font-size: 0.95rem; cursor: pointer; transition: transform 0.15s;
   }
-  .btn-save.saved { background: var(--accent); animation: savePop 0.4s ease; }
-  @keyframes savePop {
-    0%   { transform: scale(1); }
-    40%  { transform: scale(1.04); }
-    100% { transform: scale(1); }
-  }
+  .btn-save.saved { animation: savePop 0.4s ease; }
+  @keyframes savePop { 0% { transform:scale(1); } 40% { transform:scale(1.04); } 100% { transform:scale(1); } }
   .btn-clear {
     padding: 14px 18px; border-radius: 14px; border: 1px solid var(--border);
     background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif;
     font-size: 0.9rem; cursor: pointer;
   }
 
-  /* ── LOCKED BANNER ── */
   .locked-banner {
-    margin: 24px 20px 0; background: #eef0e8;
-    border: 1.5px solid #6b7c4a; border-radius: 16px;
-    padding: 22px 20px; text-align: center;
+    margin: 24px 20px 0; background: #eef0e8; border: 1.5px solid #6b7c4a;
+    border-radius: 16px; padding: 22px 20px; text-align: center;
   }
   [data-theme="dark"] .locked-banner { background: #2e3228; border-color: #8a9e60; }
   .locked-banner h3 { font-family: 'Lora', serif; font-size: 1rem; color: #4a5535; margin-bottom: 8px; }
   [data-theme="dark"] .locked-banner h3 { color: #b5c49a; }
   .locked-banner p  { font-size: 0.9rem; color: #6b7c4a; line-height: 1.5; margin-bottom: 14px; }
   [data-theme="dark"] .locked-banner p { color: #9aaa80; }
-  .btn-go-history {
-    padding: 11px 22px; border-radius: 12px; border: none;
-    background: #6b7c4a; color: #ffffff; font-family: 'DM Sans', sans-serif;
-    font-weight: 500; font-size: 0.9rem; cursor: pointer;
-  }
+  .btn-go-history { padding: 11px 22px; border-radius: 12px; border: none; background: #6b7c4a; color: #fff; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem; cursor: pointer; }
 
-  /* ── HISTORY ── */
   .history-area { padding: 20px; }
   .history-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); font-style: italic; }
   .history-empty .icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
-
   .days-counter { font-size: 0.84rem; color: var(--text-muted); text-align: center; padding: 0 0 14px; }
   .days-counter span { color: var(--accent); font-weight: 700; font-size: 0.96rem; }
 
-  .history-item {
-    background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
-    margin-bottom: 12px; overflow: hidden; transition: background 0.3s, border-color 0.3s;
-  }
-  .history-summary {
-    padding: 16px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;
-  }
+  .history-item { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); margin-bottom: 12px; overflow: hidden; transition: background 0.3s, border-color 0.3s; }
+  .history-summary { padding: 16px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
   .history-summary-row { display: flex; justify-content: space-between; align-items: flex-start; }
   .history-date { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent2); }
   .history-chevron { font-size: 0.8rem; color: var(--text-muted); transition: transform 0.25s; flex-shrink: 0; }
   .history-item.open .history-chevron { transform: rotate(180deg); }
   .history-situation { font-size: 1rem; font-weight: 500; color: var(--text); line-height: 1.4; }
   .history-feeling   { font-size: 0.88rem; color: var(--text-muted); }
-  .history-anx {
-    display: inline-block; margin-top: 6px; background: var(--surface2);
-    color: var(--accent); font-size: 0.8rem; padding: 3px 10px;
-    border-radius: 20px; font-weight: 500;
-  }
-  .history-detail {
-    display: none; padding: 0 16px 16px; border-top: 1px solid var(--border);
-    flex-direction: column; gap: 10px;
-  }
+  .history-anx { display: inline-block; margin-top: 6px; background: var(--surface2); color: var(--accent); font-size: 0.8rem; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+
+  .history-detail { display: none; padding: 0 16px 16px; border-top: 1px solid var(--border); flex-direction: column; gap: 10px; }
   .history-item.open .history-detail { display: flex; }
-  .detail-row label {
-    display: block; font-size: 0.7rem; text-transform: uppercase;
-    letter-spacing: 0.08em; color: var(--accent); font-weight: 500; margin-bottom: 3px;
-    margin-top: 10px;
-  }
+  .detail-row label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 500; margin-bottom: 3px; margin-top: 10px; }
   .detail-row p { font-size: 0.96rem; line-height: 1.55; color: var(--text); }
   .detail-actions { display: flex; gap: 8px; margin-top: 6px; }
-  .btn-edit { flex: 1; padding: 9px; border-radius: 10px; border: 1px solid var(--border);
-              background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif;
-              font-size: 0.88rem; cursor: pointer; }
-  .btn-del  { flex: 1; padding: 9px; border-radius: 10px; border: none;
-              background: #fdecea; color: #b94040; font-family: 'DM Sans', sans-serif;
-              font-size: 0.88rem; cursor: pointer; }
+  .btn-edit { flex: 1; padding: 9px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; cursor: pointer; }
+  .btn-del  { flex: 1; padding: 9px; border-radius: 10px; border: none; background: #fdecea; color: #b94040; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; cursor: pointer; }
   [data-theme="dark"] .btn-del { background: #3a2020; color: #e07070; }
 
-  /* ── CHART ── */
-  .chart-card {
-    background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
-    padding: 16px; margin-bottom: 14px;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-  }
-  .chart-title {
-    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--accent); font-weight: 500; margin-bottom: 6px;
-  }
+  .chart-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
+  .chart-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 500; margin-bottom: 6px; }
   .chart-canvas-wrap { position: relative; width: 100%; height: 180px; }
 
-  /* ── SEND PANEL ── */
-  .send-panel {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-    padding: 14px 16px; margin-bottom: 14px;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 10px; flex-wrap: wrap; transition: background 0.3s;
-  }
+  .send-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; transition: background 0.3s; }
   .send-panel-label { font-size: 0.86rem; color: var(--text-muted); flex: 1; min-width: 100px; }
   .send-panel-label strong { display: block; color: var(--text); font-size: 0.94rem; margin-bottom: 2px; }
   .send-panel-btns { display: flex; gap: 7px; flex-wrap: wrap; }
-  .btn-export-pdf   { padding: 8px 13px; border-radius: 10px; border: none; background: var(--accent2);
-                      color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
-                      font-weight: 500; cursor: pointer; white-space: nowrap; }
-  .btn-export-email { padding: 8px 13px; border-radius: 10px; border: none; background: var(--accent);
-                      color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
-                      font-weight: 500; cursor: pointer; white-space: nowrap; }
-  .btn-export-clear { padding: 8px 13px; border-radius: 10px; border: 1px solid var(--border);
-                      background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif;
-                      font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
+  .btn-export-pdf   { padding: 8px 13px; border-radius: 10px; border: none; background: var(--accent2); color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .btn-export-email { padding: 8px 13px; border-radius: 10px; border: none; background: var(--accent); color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .btn-export-clear { padding: 8px 13px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
 
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 90px; left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--text); color: var(--bg);
-    padding: 10px 20px; border-radius: 30px; font-size: 0.85rem;
-    opacity: 0; transition: all 0.3s; z-index: 200; white-space: nowrap;
-  }
+  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: var(--bg); padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; opacity: 0; transition: all 0.3s; z-index: 200; white-space: nowrap; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
@@ -266,28 +189,27 @@
 <header>
   <div style="width:40px"></div>
   <div class="header-title">
-    <h1>🧠 Registro de Pensamentos</h1>
+    <h1>&#x1F9E0; Registro de Pensamentos</h1>
     <p>Terapia Cognitivo-Comportamental</p>
   </div>
-  <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" title="Alternar tema">🌙</button>
+  <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" title="Alternar tema">&#x1F319;</button>
 </header>
 
 <div class="tabs">
-  <div class="tab active" onclick="showTab('form',this)">📝 Formulário</div>
-  <div class="tab" onclick="showTab('history',this)">📋 Histórico</div>
+  <div class="tab active" onclick="showTab('form',this)">&#x1F4DD; Formul&aacute;rio</div>
+  <div class="tab" onclick="showTab('history',this)">&#x1F4CB; Hist&oacute;rico</div>
 </div>
 
-<!-- FORM -->
 <div class="page active" id="page-form">
   <div id="form-locked" class="locked-banner" style="display:none">
-    <h3>🔒 Limite de 10 dias atingido</h3>
-    <p>Você não pode salvar novos registros até enviar o histórico e limpar o ciclo.</p>
-    <button class="btn-go-history" onclick="goHistory()">📋 Ir para o Histórico</button>
+    <h3>&#x1F512; Limite de 10 dias atingido</h3>
+    <p>Voc&ecirc; n&atilde;o pode salvar novos registros at&eacute; enviar o hist&oacute;rico e limpar o ciclo.</p>
+    <button class="btn-go-history" onclick="goHistory()">&#x1F4CB; Ir para o Hist&oacute;rico</button>
   </div>
   <div id="form-content">
     <div class="form-area">
       <div class="field-card">
-        <label>📅 Data / Hora</label>
+        <label>&#x1F4C5; Data / Hora</label>
         <div class="datetime-row">
           <input type="date" id="f-date">
           <input type="time" id="f-time">
@@ -295,55 +217,47 @@
         </div>
       </div>
       <div class="field-card">
-        <label>📍 Situação <span class="char-count" id="cc-situation"></span></label>
-        <textarea id="f-situation" placeholder="onde você estava, o que aconteceu, com quem..."
-          oninput="autoResize(this);updateCount('f-situation','cc-situation')"></textarea>
+        <label>&#x1F4CD; Situa&ccedil;&atilde;o <span class="char-count" id="cc-situation"></span></label>
+        <textarea id="f-situation" placeholder="onde voc&ecirc; estava, o que aconteceu, com quem..." oninput="autoResize(this);updateCount('f-situation','cc-situation')"></textarea>
       </div>
       <div class="field-card">
-        <label>💭 Pensamento Automático <span class="char-count" id="cc-thought"></span></label>
-        <textarea id="f-thought" placeholder="o que passou pela sua cabeça naquele momento..."
-          oninput="autoResize(this);updateCount('f-thought','cc-thought')"></textarea>
+        <label>&#x1F4AD; Pensamento Autom&aacute;tico <span class="char-count" id="cc-thought"></span></label>
+        <textarea id="f-thought" placeholder="o que passou pela sua cabe&ccedil;a naquele momento..." oninput="autoResize(this);updateCount('f-thought','cc-thought')"></textarea>
       </div>
       <div class="field-card">
-        <label>❤️ Sentimento <span class="char-count" id="cc-feeling"></span></label>
-        <textarea id="f-feeling" placeholder="que emoção você sentiu — ansiedade, tristeza, raiva..."
-          oninput="autoResize(this);updateCount('f-feeling','cc-feeling')"></textarea>
+        <label>&#x2764;&#xFE0F; Sentimento <span class="char-count" id="cc-feeling"></span></label>
+        <textarea id="f-feeling" placeholder="que emo&ccedil;&atilde;o voc&ecirc; sentiu &mdash; ansiedade, tristeza, raiva..." oninput="autoResize(this);updateCount('f-feeling','cc-feeling')"></textarea>
       </div>
       <div class="field-card">
-        <label>📊 Grau de Ansiedade Inicial (0–10)</label>
+        <label>&#x1F4CA; Grau de Ansiedade Inicial (0&ndash;10)</label>
         <div class="slider-row">
-          <input type="range" min="0" max="10" value="0" id="f-anxiety1"
-            oninput="document.getElementById('anx1-val').textContent=this.value">
+          <input type="range" min="0" max="10" value="0" id="f-anxiety1" oninput="document.getElementById('anx1-val').textContent=this.value">
           <span class="slider-val" id="anx1-val">0</span>
         </div>
       </div>
       <div class="field-card">
-        <label>⚡ Reação / Comportamento <span class="char-count" id="cc-reaction"></span></label>
-        <textarea id="f-reaction" placeholder="como você reagiu, o que fez..."
-          oninput="autoResize(this);updateCount('f-reaction','cc-reaction')"></textarea>
+        <label>&#x26A1; Rea&ccedil;&atilde;o / Comportamento <span class="char-count" id="cc-reaction"></span></label>
+        <textarea id="f-reaction" placeholder="como voc&ecirc; reagiu, o que fez..." oninput="autoResize(this);updateCount('f-reaction','cc-reaction')"></textarea>
       </div>
       <div class="field-card">
-        <label>🌱 Pensamento Alternativo <span class="char-count" id="cc-alt"></span></label>
-        <textarea id="f-alt-thought" placeholder="uma forma mais equilibrada de ver a situação..."
-          oninput="autoResize(this);updateCount('f-alt-thought','cc-alt')"></textarea>
+        <label>&#x1F331; Pensamento Alternativo <span class="char-count" id="cc-alt"></span></label>
+        <textarea id="f-alt-thought" placeholder="uma forma mais equilibrada de ver a situa&ccedil;&atilde;o..." oninput="autoResize(this);updateCount('f-alt-thought','cc-alt')"></textarea>
       </div>
       <div class="field-card">
-        <label>📊 Grau de Ansiedade Final (0–10)</label>
+        <label>&#x1F4CA; Grau de Ansiedade Final (0&ndash;10)</label>
         <div class="slider-row">
-          <input type="range" min="0" max="10" value="0" id="f-anxiety2"
-            oninput="document.getElementById('anx2-val').textContent=this.value">
+          <input type="range" min="0" max="10" value="0" id="f-anxiety2" oninput="document.getElementById('anx2-val').textContent=this.value">
           <span class="slider-val" id="anx2-val">0</span>
         </div>
       </div>
     </div>
     <div class="form-actions">
-      <button class="btn-clear" onclick="clearForm()">🗑️ Limpar</button>
-      <button class="btn-save" id="btn-save" onclick="saveRecord()">💾 Salvar Registro</button>
+      <button class="btn-clear" onclick="clearForm()">&#x1F5D1;&#xFE0F; Limpar</button>
+      <button class="btn-save" id="btn-save" onclick="saveRecord()">&#x1F4BE; Salvar Registro</button>
     </div>
   </div>
 </div>
 
-<!-- HISTORY -->
 <div class="page" id="page-history">
   <div class="history-area" id="history-area"></div>
 </div>
@@ -351,109 +265,86 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const EMAIL_DEST = 'vinnitog@gmail.com';
-const MAX_DAYS   = 10;
-
-let records = [];
+var EMAIL_DEST = 'vinnitog@gmail.com';
+var MAX_DAYS   = 10;
+var records    = [];
 try { records = JSON.parse(localStorage.getItem('rp_records') || '[]'); } catch(e) {}
-let editingId = null;
-
+var editingId  = null;
 function storageSave(d) { try { localStorage.setItem('rp_records', JSON.stringify(d)); } catch(e) {} }
 
-// ── THEME ──────────────────────────────────────────────────────
-let darkMode = localStorage.getItem('rp_dark') === '1';
+// THEME
+var darkMode = localStorage.getItem('rp_dark') === '1';
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : '');
-  document.getElementById('theme-btn').textContent = darkMode ? '\u2600\ufe0f' : '\ud83c\udf19';
+  document.getElementById('theme-btn').textContent = darkMode ? '\u2600\uFE0F' : '\uD83C\uDF19';
 }
-function toggleTheme() {
-  darkMode = !darkMode;
-  localStorage.setItem('rp_dark', darkMode ? '1' : '0');
-  applyTheme();
-}
+function toggleTheme() { darkMode = !darkMode; localStorage.setItem('rp_dark', darkMode ? '1' : '0'); applyTheme(); }
 applyTheme();
 
-// ── AUTO-RESIZE ────────────────────────────────────────────────
+// TEXTAREA
 function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
-function updateCount(fieldId, countId) {
-  const len = document.getElementById(fieldId).value.length;
-  document.getElementById(countId).textContent = len > 0 ? len + ' car.' : '';
-}
-function resetCounts() {
-  ['cc-situation','cc-thought','cc-feeling','cc-reaction','cc-alt']
-    .forEach(id => { document.getElementById(id).textContent = ''; });
-}
+function updateCount(fid, cid) { var l = document.getElementById(fid).value.length; document.getElementById(cid).textContent = l > 0 ? l + ' car.' : ''; }
+function resetCounts() { ['cc-situation','cc-thought','cc-feeling','cc-reaction','cc-alt'].forEach(function(id){ document.getElementById(id).textContent = ''; }); }
 function resizeAll() { document.querySelectorAll('.field-card textarea').forEach(autoResize); }
 
-// ── DATE ──────────────────────────────────────────────────────
+// DATE
 function setNow() {
-  const now = new Date();
-  const y  = now.getFullYear();
-  const mo = String(now.getMonth() + 1).padStart(2, '0');
-  const d  = String(now.getDate()).padStart(2, '0');
-  const hh = String(now.getHours()).padStart(2, '0');
-  const mm = String(now.getMinutes()).padStart(2, '0');
-  document.getElementById('f-date').value = y + '-' + mo + '-' + d;
-  document.getElementById('f-time').value = hh + ':' + mm;
+  var now = new Date();
+  var y = now.getFullYear(), mo = String(now.getMonth()+1).padStart(2,'0'), d = String(now.getDate()).padStart(2,'0');
+  var hh = String(now.getHours()).padStart(2,'0'), mm = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('f-date').value = y+'-'+mo+'-'+d;
+  document.getElementById('f-time').value = hh+':'+mm;
 }
 setNow();
 
-// ── TABS ──────────────────────────────────────────────────────
+// TABS
 function showTab(name, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById('page-'+name).classList.add('active');
   el.classList.add('active');
   if (name === 'history') renderHistory();
   if (name === 'form') applyLockUI();
 }
 function goHistory() {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
   document.getElementById('page-history').classList.add('active');
   document.querySelectorAll('.tab')[1].classList.add('active');
   renderHistory();
 }
 
-// ── LOCK ──────────────────────────────────────────────────────
-function countDays() { return new Set(records.map(r => r.dateKey)).size; }
+// LOCK
+function countDays() { return new Set(records.map(function(r){ return r.dateKey; })).size; }
 function isLocked() { return countDays() >= MAX_DAYS; }
 function applyLockUI() {
-  const locked = isLocked();
+  var locked = isLocked();
   document.getElementById('form-locked').style.display  = locked ? 'block' : 'none';
   document.getElementById('form-content').style.display = locked ? 'none'  : 'block';
 }
 
-// ── FORM ──────────────────────────────────────────────────────
+// FORM
 function clearForm() {
-  setNow();
-  editingId = null;
-  ['f-situation','f-thought','f-feeling','f-reaction','f-alt-thought'].forEach(id => {
-    const el = document.getElementById(id);
-    el.value = '';
-    el.style.height = '';
+  setNow(); editingId = null;
+  ['f-situation','f-thought','f-feeling','f-reaction','f-alt-thought'].forEach(function(id){
+    var el = document.getElementById(id); el.value = ''; el.style.height = '';
   });
   resetCounts();
   document.getElementById('f-anxiety1').value = 0; document.getElementById('anx1-val').textContent = '0';
   document.getElementById('f-anxiety2').value = 0; document.getElementById('anx2-val').textContent = '0';
-  const btn = document.getElementById('btn-save');
-  btn.textContent = '\ud83d\udcbe Salvar Registro';
-  btn.classList.remove('saved');
+  var btn = document.getElementById('btn-save'); btn.textContent = '\uD83D\uDCBE Salvar Registro'; btn.classList.remove('saved');
 }
-
 function getDatetimeDisplay() {
-  const d = document.getElementById('f-date').value;
-  const t = document.getElementById('f-time').value;
+  var d = document.getElementById('f-date').value, t = document.getElementById('f-time').value;
   if (!d) return new Date().toLocaleString('pt-BR');
-  const [y, m, dd] = d.split('-');
-  return dd + '/' + m + '/' + y + (t ? ', ' + t : '');
+  var p = d.split('-');
+  return p[2]+'/'+p[1]+'/'+p[0]+(t ? ', '+t : '');
 }
-
 function saveRecord() {
-  if (isLocked() && !editingId) { showToast('Limite atingido. Envie o hist\u00f3rico primeiro.'); return; }
-  const data = {
-    datetime:   getDatetimeDisplay(),
-    dateKey:    document.getElementById('f-date').value || new Date().toLocaleDateString('pt-BR'),
+  if (isLocked() && !editingId) { showToast('Limite atingido. Envie o hist\u00F3rico primeiro.'); return; }
+  var data = {
+    datetime: getDatetimeDisplay(),
+    dateKey:  document.getElementById('f-date').value || new Date().toLocaleDateString('pt-BR'),
     situation:  document.getElementById('f-situation').value.trim(),
     thought:    document.getElementById('f-thought').value.trim(),
     feeling:    document.getElementById('f-feeling').value.trim(),
@@ -462,334 +353,229 @@ function saveRecord() {
     altThought: document.getElementById('f-alt-thought').value.trim(),
     anxiety2:   +document.getElementById('f-anxiety2').value,
   };
-  if (!data.situation && !data.thought && !data.feeling) {
-    showToast('Preencha pelo menos situa\u00e7\u00e3o, pensamento ou sentimento'); return;
-  }
+  if (!data.situation && !data.thought && !data.feeling) { showToast('Preencha pelo menos situa\u00E7\u00E3o, pensamento ou sentimento'); return; }
   if (editingId) {
-    const idx = records.findIndex(r => r.id === editingId);
-    if (idx !== -1) records[idx] = { ...records[idx], ...data };
+    var idx = records.findIndex(function(r){ return r.id === editingId; });
+    if (idx !== -1) records[idx] = Object.assign({}, records[idx], data);
     editingId = null;
   } else {
-    records.unshift({ id: Date.now(), ...data });
+    records.unshift(Object.assign({ id: Date.now() }, data));
   }
   storageSave(records);
-  const btn = document.getElementById('btn-save');
-  btn.textContent = '\u2705 Salvo!';
-  btn.classList.add('saved');
-  setTimeout(() => { btn.textContent = '\ud83d\udcbe Salvar Registro'; btn.classList.remove('saved'); }, 1800);
-  clearForm();
-  showToast('Registro salvo! \ud83d\udc9c');
-  setTimeout(() => goHistory(), 1000);
+  var btn = document.getElementById('btn-save'); btn.textContent = '\u2705 Salvo!'; btn.classList.add('saved');
+  setTimeout(function(){ btn.textContent = '\uD83D\uDCBE Salvar Registro'; btn.classList.remove('saved'); }, 1800);
+  clearForm(); showToast('Registro salvo! \uD83D\uDC9C');
+  setTimeout(function(){ goHistory(); }, 1000);
 }
 
-// ── EMAIL EXPORT ───────────────────────────────────────────────
+// EMAIL
 function buildExportText() {
-  const lines = [
-    'REGISTRO DE PENSAMENTOS — TCC',
-    'Exportado em: ' + new Date().toLocaleString('pt-BR'),
-    'Total de registros: ' + records.length,
-    '='.repeat(50), ''
-  ];
-  records.forEach((r, i) => {
-    lines.push('REGISTRO ' + (i+1) + ' — ' + r.datetime);
-    lines.push('-'.repeat(40));
-    if (r.situation)   lines.push('Situa\u00e7\u00e3o:               ' + r.situation);
-    if (r.thought)     lines.push('Pensamento autom\u00e1tico:  ' + r.thought);
-    if (r.feeling)     lines.push('Sentimento:             ' + r.feeling);
-    lines.push('Ansiedade inicial:      ' + r.anxiety1 + '/10');
-    if (r.reaction)    lines.push('Rea\u00e7\u00e3o:                 ' + r.reaction);
-    if (r.altThought)  lines.push('Pensamento alternativo: ' + r.altThought);
-    lines.push('Ansiedade final:        ' + r.anxiety2 + '/10');
-    lines.push('');
+  var now = new Date(), sep = '\u2015'.repeat(44), lines = [];
+  lines.push('Ol\u00E1,');
+  lines.push('');
+  lines.push('Segue meu Registro de Pensamentos referente ao per\u00EDodo de ' + now.toLocaleDateString('pt-BR') + '.');
+  lines.push('Total de registros: ' + records.length);
+  lines.push(''); lines.push(sep); lines.push('');
+  records.slice().reverse().forEach(function(r, i, arr) {
+    lines.push('REGISTRO ' + (i+1) + ' DE ' + arr.length);
+    lines.push('Data e hora: ' + r.datetime); lines.push('');
+    if (r.situation)  lines.push('  SITUA\u00C7\u00C3O\n  ' + r.situation);
+    if (r.thought)    lines.push('\n  PENSAMENTO AUTOM\u00C1TICO\n  ' + r.thought);
+    if (r.feeling)    lines.push('\n  SENTIMENTO\n  ' + r.feeling);
+    lines.push('\n  GRAU DE ANSIEDADE INICIAL: ' + r.anxiety1 + '/10');
+    if (r.reaction)   lines.push('\n  REA\u00C7\u00C3O\n  ' + r.reaction);
+    if (r.altThought) lines.push('\n  PENSAMENTO ALTERNATIVO\n  ' + r.altThought);
+    lines.push('\n  GRAU DE ANSIEDADE FINAL: ' + r.anxiety2 + '/10');
+    var delta = (+r.anxiety2) - (+r.anxiety1);
+    lines.push(delta < 0 ? '  (\u2193 redu\u00E7\u00E3o de ' + Math.abs(delta) + ' ponto' + (Math.abs(delta)>1?'s':'') + ' ap\u00F3s a reflex\u00E3o)'
+      : delta > 0 ? '  (\u2191 aumento de ' + delta + ' ponto' + (delta>1?'s':'') + ' ap\u00F3s a reflex\u00E3o)'
+      : '  (= sem altera\u00E7\u00E3o ap\u00F3s a reflex\u00E3o)');
+    lines.push(''); lines.push(sep); lines.push('');
   });
+  lines.push('Enviado pelo app RDP em ' + now.toLocaleString('pt-BR') + '.');
   return lines.join('\n');
 }
 function openEmail() {
-  const s = encodeURIComponent('Registro de Pensamentos TCC — ' + new Date().toLocaleDateString('pt-BR'));
-  const b = encodeURIComponent(buildExportText());
+  var s = encodeURIComponent('Registro de Pensamentos TCC \u2014 ' + new Date().toLocaleDateString('pt-BR'));
+  var b = encodeURIComponent(buildExportText());
   window.open('https://mail.google.com/mail/?view=cm&to=' + EMAIL_DEST + '&su=' + s + '&body=' + b, '_blank');
 }
 function confirmClear() {
-  if (confirm('Hist\u00f3rico exportado?\n\nTodos os registros ser\u00e3o apagados e um novo ciclo come\u00e7ar\u00e1.')) {
+  if (confirm('Hist\u00F3rico exportado?\n\nTodos os registros ser\u00E3o apagados e um novo ciclo come\u00E7ar\u00E1.')) {
     records = []; storageSave(records); renderHistory();
-    showToast('Hist\u00f3rico limpo! Novo ciclo iniciado \u2728');
+    showToast('Hist\u00F3rico limpo! Novo ciclo iniciado \u2728');
   }
 }
 
-// ── PDF EXPORT ─────────────────────────────────────────────────
+// PDF
 function exportPDF() {
   if (!records.length) { showToast('Nenhum registro para exportar'); return; }
-  if (typeof window.jspdf === 'undefined') {
-    showToast('Aguarde, carregando PDF...');
-    setTimeout(exportPDF, 1500);
-    return;
-  }
+  if (typeof window.jspdf === 'undefined') { showToast('Aguarde, carregando PDF...'); setTimeout(exportPDF, 1500); return; }
   var jsPDF = window.jspdf.jsPDF;
-  var doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-  var pageW = doc.internal.pageSize.getWidth();
-  var pageH = doc.internal.pageSize.getHeight();
-  var mX = 8, mY = 12;
-  var tableW = pageW - mX * 2;
-  var oliva = [74, 85, 53];
-  var olivaL = [212, 219, 192];
-  var rowAlt = [240, 242, 234];
-
-  // Title
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(13);
-  doc.setTextColor(74, 85, 53);
-  doc.text('REGISTRO DE PENSAMENTOS', pageW / 2, mY, { align: 'center' });
-
-  var headers = ['Data/Hora', 'Situa\u00e7\u00e3o', 'Pensamento\nAutom\u00e1tico', 'Sentimento',
-                 'Grau\nInicial', 'Rea\u00e7\u00e3o', 'Pensamento\nAlternativo', 'Grau\nFinal'];
-  var cw = [
-    tableW*0.10, tableW*0.17, tableW*0.15, tableW*0.11,
-    tableW*0.08, tableW*0.15, tableW*0.16, tableW*0.08
-  ];
-  var startY = mY + 6;
-  var hdrH = 10;
-
-  function drawHeader(y) {
-    var x = mX;
-    headers.forEach(function(h, i) {
-      doc.setFillColor(oliva[0], oliva[1], oliva[2]);
-      doc.rect(x, y, cw[i], hdrH, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      var lines = h.split('\n');
-      var lh = 3.2;
-      var tot = lines.length * lh;
-      lines.forEach(function(line, li) {
-        doc.text(line, x + cw[i]/2, y + (hdrH - tot)/2 + li*lh + lh*0.8, { align: 'center' });
-      });
-      x += cw[i];
+  var doc = new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' });
+  var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+  var mX = 8, mY = 12, tW = W - mX*2;
+  var oliva=[74,85,53], oL=[212,219,192], rAlt=[240,242,234];
+  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(74,85,53);
+  doc.text('REGISTRO DE PENSAMENTOS', W/2, mY, {align:'center'});
+  var hdrs = ['Data/Hora','Situa\u00E7\u00E3o','Pensamento\nAutom\u00E1tico','Sentimento','Grau\nInicial','Rea\u00E7\u00E3o','Pensamento\nAlternativo','Grau\nFinal'];
+  var cw = [tW*0.10,tW*0.17,tW*0.15,tW*0.11,tW*0.08,tW*0.15,tW*0.16,tW*0.08];
+  var sY = mY+6, hH = 10;
+  function drawHdr(y) {
+    var x=mX;
+    hdrs.forEach(function(h,i){
+      doc.setFillColor(oliva[0],oliva[1],oliva[2]); doc.rect(x,y,cw[i],hH,'F');
+      doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(7);
+      var ls=h.split('\n'),lh=3.2,tot=ls.length*lh;
+      ls.forEach(function(l,li){ doc.text(l,x+cw[i]/2,y+(hH-tot)/2+li*lh+lh*0.8,{align:'center'}); });
+      x+=cw[i];
     });
   }
-
-  drawHeader(startY);
-
-  var rowH = 20;
-  var y = startY + hdrH;
-
-  records.forEach(function(r, idx) {
-    if (y + rowH > pageH - mY) {
-      doc.addPage();
-      y = mY;
-      drawHeader(y);
-      y += hdrH;
-    }
-    var bg = idx % 2 === 0 ? [255,255,255] : rowAlt;
-    doc.setFillColor(bg[0], bg[1], bg[2]);
-    doc.rect(mX, y, tableW, rowH, 'F');
-    doc.setDrawColor(olivaL[0], olivaL[1], olivaL[2]);
-    doc.setLineWidth(0.2);
-    doc.rect(mX, y, tableW, rowH, 'S');
-    var x = mX;
-    cw.forEach(function(w, ci) {
-      if (ci > 0) { doc.setDrawColor(olivaL[0], olivaL[1], olivaL[2]); doc.line(x, y, x, y+rowH); }
-      x += w;
+  drawHdr(sY);
+  var rH=20, y=sY+hH;
+  records.forEach(function(r,idx){
+    if(y+rH>H-mY){doc.addPage();y=mY;drawHdr(y);y+=hH;}
+    var bg=idx%2===0?[255,255,255]:rAlt;
+    doc.setFillColor(bg[0],bg[1],bg[2]); doc.rect(mX,y,tW,rH,'F');
+    doc.setDrawColor(oL[0],oL[1],oL[2]); doc.setLineWidth(0.2); doc.rect(mX,y,tW,rH,'S');
+    var x=mX; cw.forEach(function(w,ci){if(ci>0){doc.setDrawColor(oL[0],oL[1],oL[2]);doc.line(x,y,x,y+rH);}x+=w;});
+    var cells=[r.datetime||'',r.situation||'',r.thought||'',r.feeling||'',String(r.anxiety1!==undefined?r.anxiety1:0)+'/10',r.reaction||'',r.altThought||'',String(r.anxiety2!==undefined?r.anxiety2:0)+'/10'];
+    x=mX;
+    cells.forEach(function(txt,ci){
+      var g=ci===4||ci===7;
+      doc.setFont('helvetica',g?'bold':'normal'); doc.setFontSize(g?9:6.5); doc.setTextColor(30,30,30);
+      if(g){doc.text(txt,x+cw[ci]/2,y+rH/2+1.5,{align:'center'});}
+      else{var ls=doc.splitTextToSize(txt,cw[ci]-3);ls.slice(0,Math.floor((rH-4)/3.2)).forEach(function(l,li){doc.text(l,x+1.5,y+4+li*3.2);});}
+      x+=cw[ci];
     });
-    var cells = [
-      r.datetime || '',
-      r.situation || '',
-      r.thought || '',
-      r.feeling || '',
-      String(r.anxiety1 !== undefined ? r.anxiety1 : 0) + '/10',
-      r.reaction || '',
-      r.altThought || '',
-      String(r.anxiety2 !== undefined ? r.anxiety2 : 0) + '/10'
-    ];
-    x = mX;
-    cells.forEach(function(text, ci) {
-      var isGrau = ci === 4 || ci === 7;
-      doc.setFont('helvetica', isGrau ? 'bold' : 'normal');
-      doc.setFontSize(isGrau ? 9 : 6.5);
-      doc.setTextColor(30, 30, 30);
-      var pad = 1.5;
-      if (isGrau) {
-        doc.text(text, x + cw[ci]/2, y + rowH/2 + 1.5, { align: 'center' });
-      } else {
-        var lines = doc.splitTextToSize(text, cw[ci] - pad*2);
-        var maxL = Math.floor((rowH - 4) / 3.2);
-        lines.slice(0, maxL).forEach(function(line, li) {
-          doc.text(line, x + pad, y + 4 + li * 3.2);
-        });
-      }
-      x += cw[ci];
-    });
-    y += rowH;
+    y+=rH;
   });
-
-  doc.setDrawColor(oliva[0], oliva[1], oliva[2]);
-  doc.setLineWidth(0.5);
-  doc.line(mX, y, mX + tableW, y);
-  doc.setFont('helvetica', 'italic');
-  doc.setFontSize(7);
-  doc.setTextColor(150, 150, 150);
-  doc.text('Gerado pelo app RDP', pageW/2, pageH - 4, { align: 'center' });
-
-  var date = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
-  doc.save('RDP-' + date + '.pdf');
-  showToast('PDF exportado! \ud83d\udcc4');
+  doc.setDrawColor(oliva[0],oliva[1],oliva[2]); doc.setLineWidth(0.5); doc.line(mX,y,mX+tW,y);
+  doc.setFont('helvetica','italic'); doc.setFontSize(7); doc.setTextColor(150,150,150);
+  doc.text('Gerado pelo app RDP', W/2, H-4, {align:'center'});
+  doc.save('RDP-'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.pdf');
+  showToast('PDF exportado! \uD83D\uDCC4');
 }
 
-// ── CHART ─────────────────────────────────────────────────────
-var _anxietyChart = null;
+// FEELING EMOJI
+function feelingEmoji(feeling) {
+  if (!feeling) return '\uD83D\uDE14';
+  var f = feeling.toLowerCase();
+  if (/raiva|irrita|bravo|f\u00FAria|revolta|\u00F3dio/.test(f))             return '\uD83D\uDE21';
+  if (/ansied|nervos|preocup|aperto|tenso|tens\u00E3o|pavor/.test(f))        return '\uD83D\uDE30';
+  if (/medo|terror|assust|p\u00E2nico|horror/.test(f))                       return '\uD83D\uDE28';
+  if (/triste|tristeza|choro|vazio|solid\u00E3o|sozinho/.test(f))            return '\uD83D\uDE22';
+  if (/vergonha|humilha|constrang|envergonha/.test(f))                       return '\uD83D\uDE33';
+  if (/culpa|culpado|remorso/.test(f))                                       return '\uD83D\uDE14';
+  if (/frustrad|decep/.test(f))                                              return '\uD83D\uDE41';
+  if (/confus|perdido|desorient/.test(f))                                    return '\uD83E\uDD14';
+  if (/cansa\u00E7o|cansado|esgota|exaust/.test(f))                          return '\uD83D\uDE2B';
+  if (/feliz|alegri|contente|bem|animad/.test(f))                            return '\uD83D\uDE04';
+  if (/calmo|tranquil|paz|sereno/.test(f))                                   return '\uD83D\uDE0C';
+  return '\uD83D\uDE14';
+}
+
+// CHART
+var _chart = null;
 function renderChart() {
   if (records.length < 2) return '';
-  var ordered = records.slice(0, 10).reverse();
-  var labels  = ordered.map(function(r) { return r.datetime.split(',')[0].trim(); });
-  var a2vals  = ordered.map(function(r) { return +r.anxiety2; });
-  var id = 'anxiety-chart-' + Date.now();
-  if (_anxietyChart) { try { _anxietyChart.destroy(); } catch(e) {} _anxietyChart = null; }
-  setTimeout(function() {
+  var ordered = records.slice(0,10).reverse();
+  var labels  = ordered.map(function(r){ return r.datetime.split(',')[0].trim(); });
+  var a2vals  = ordered.map(function(r){ return +r.anxiety2; });
+  var id = 'ac-'+Date.now();
+  if (_chart) { try { _chart.destroy(); } catch(e) {} _chart = null; }
+  setTimeout(function(){
     var canvas = document.getElementById(id);
     if (!canvas || !window.Chart) return;
-    _anxietyChart = new window.Chart(canvas, {
+    _chart = new window.Chart(canvas, {
       type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Ansiedade final',
-          data: a2vals,
-          borderColor: '#6b7c4a',
-          backgroundColor: 'rgba(107,124,74,0.12)',
-          fill: true,
-          tension: 0.35,
-          pointBackgroundColor: '#6b7c4a',
-          pointBorderColor: '#ffffff',
-          pointBorderWidth: 2,
-          pointRadius: 6,
-          pointHoverRadius: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { min: 0, max: 10,
-               ticks: { stepSize: 5, color: '#8a9e60', font: { size: 11 } },
-               grid: { color: 'rgba(138,158,96,0.15)' } },
-          x: { ticks: { color: '#8a9e60', font: { size: 11 }, maxRotation: 0 },
-               grid: { display: false } }
-        }
-      }
+      data: { labels:labels, datasets:[{ label:'Ansiedade final', data:a2vals, borderColor:'#6b7c4a', backgroundColor:'rgba(107,124,74,0.12)', fill:true, tension:0.35, pointBackgroundColor:'#6b7c4a', pointBorderColor:'#fff', pointBorderWidth:2, pointRadius:6, pointHoverRadius:8 }] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{min:0,max:10,ticks:{stepSize:5,color:'#8a9e60',font:{size:11}},grid:{color:'rgba(138,158,96,0.15)'}}, x:{ticks:{color:'#8a9e60',font:{size:11},maxRotation:0},grid:{display:false}} } }
     });
   }, 50);
-  return '<div class="chart-card"><div class="chart-title">\ud83d\udcca Evolu\u00e7\u00e3o da Ansiedade</div>'
-    + '<div class="chart-canvas-wrap"><canvas id="' + id + '"></canvas></div></div>';
+  return '<div class="chart-card"><div class="chart-title">\uD83D\uDCCA Evolu\u00E7\u00E3o da Ansiedade</div><div class="chart-canvas-wrap"><canvas id="'+id+'"></canvas></div></div>';
 }
 
-// ── HISTORY ───────────────────────────────────────────────────
+// HISTORY
 function renderHistory() {
-  var area   = document.getElementById('history-area');
-  var dias   = countDays();
-  var locked = dias >= MAX_DAYS;
-  var html   = '';
-
+  var area = document.getElementById('history-area'), dias = countDays(), locked = dias >= MAX_DAYS, html = '';
   if (records.length > 0) {
-    var urgentLabel = locked
-      ? '<strong style="color:#c0393b">\ud83d\udd12 Limite atingido — envie e limpe para continuar</strong>'
-      : '<strong>Enviar hist\u00f3rico</strong>';
-    var urgentNote = locked
-      ? 'Voc\u00ea atingiu ' + MAX_DAYS + ' dias. <b>Novos registros est\u00e3o bloqueados</b> at\u00e9 enviar e limpar.'
-      : 'Envie a qualquer momento e limpe para come\u00e7ar um novo ciclo.';
-    html += '<div class="send-panel" style="' + (locked ? 'border-color:#f0ad4e;background:#fffbf0' : '') + '">'
-      + '<div class="send-panel-label">' + urgentLabel + '<span>' + urgentNote + '</span></div>'
-      + '<div class="send-panel-btns">'
-      + '<button class="btn-export-pdf"   onclick="exportPDF()">\ud83d\udcc4 PDF</button>'
-      + '<button class="btn-export-email" onclick="openEmail()">\ud83d\udce7 Gmail</button>'
-      + '<button class="btn-export-clear" onclick="confirmClear()">\ud83d\uddd1\ufe0f Limpar</button>'
-      + '</div></div>';
+    var ul = locked ? '<strong style="color:#c0393b">\uD83D\uDD12 Limite atingido \u2014 envie e limpe para continuar</strong>' : '<strong>Enviar hist\u00F3rico</strong>';
+    var un = locked ? 'Voc\u00EA atingiu '+MAX_DAYS+' dias. <b>Novos registros est\u00E3o bloqueados</b> at\u00E9 enviar e limpar.' : 'Envie a qualquer momento e limpe para come\u00E7ar um novo ciclo.';
+    html += '<div class="send-panel" style="'+(locked?'border-color:#f0ad4e;background:#fffbf0':'')+'">'
+      +'<div class="send-panel-label">'+ul+'<span>'+un+'</span></div>'
+      +'<div class="send-panel-btns">'
+      +'<button class="btn-export-pdf" onclick="exportPDF()">\uD83D\uDCC4 PDF</button>'
+      +'<button class="btn-export-email" onclick="openEmail()">\uD83D\uDCE7 Gmail</button>'
+      +'<button class="btn-export-clear" onclick="confirmClear()">\uD83D\uDDD1\uFE0F Limpar</button>'
+      +'</div></div>';
   }
-
   html += renderChart();
-
   if (!records.length) {
-    html += '<div class="history-empty"><div class="icon">\ud83d\udcd6</div><p>Nenhum registro ainda.<br>Preencha o formul\u00e1rio!</p></div>';
+    html += '<div class="history-empty"><div class="icon">\uD83D\uDCD6</div><p>Nenhum registro ainda.<br>Preencha o formul\u00E1rio!</p></div>';
   } else {
-    html += '<div class="days-counter">\ud83d\udcc5 <span>' + dias + '</span> dia' + (dias!==1?'s':'') + ' de ' + MAX_DAYS + '</div>';
+    html += '<div class="days-counter">\uD83D\uDCC5 <span>'+dias+'</span> dia'+(dias!==1?'s':'')+' de '+MAX_DAYS+'</div>';
     html += records.map(function(r) {
-      function safe(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-      return '<div class="history-item" id="item-' + r.id + '">'
-        + '<div class="history-summary" onclick="toggleItem(' + r.id + ')">'
-        + '<div class="history-summary-row">'
-        + '<div class="history-date">' + safe(r.datetime) + '</div>'
-        + '<span class="history-chevron">\u25be</span>'
-        + '</div>'
-        + '<div class="history-situation">' + safe(r.situation || '(sem situa\u00e7\u00e3o)') + '</div>'
-        + '<div class="history-feeling">\ud83d\ude14 ' + safe(r.feeling || '\u2013') + '</div>'
-        + '<div class="history-anx">Ansiedade: ' + r.anxiety1 + '/10 \u2192 ' + r.anxiety2 + '/10</div>'
-        + '</div>'
-        + '<div class="history-detail">'
-        + (r.thought    ? '<div class="detail-row"><label>\ud83d\udcad Pensamento Autom\u00e1tico</label><p>' + safe(r.thought) + '</p></div>' : '')
-        + (r.reaction   ? '<div class="detail-row"><label>\u26a1 Rea\u00e7\u00e3o</label><p>' + safe(r.reaction) + '</p></div>' : '')
-        + (r.altThought ? '<div class="detail-row"><label>\ud83c\udf31 Pensamento Alternativo</label><p>' + safe(r.altThought) + '</p></div>' : '')
-        + '<div class="detail-actions">'
-        + '<button class="btn-edit" onclick="loadRecord(' + r.id + ')">\u270f\ufe0f Editar</button>'
-        + '<button class="btn-del"  onclick="deleteRecord(' + r.id + ')">\ud83d\uddd1\ufe0f Deletar</button>'
-        + '</div></div></div>';
+      function safe(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+      return '<div class="history-item" id="item-'+r.id+'">'
+        +'<div class="history-summary" onclick="toggleItem('+r.id+')">'
+        +'<div class="history-summary-row">'
+        +'<div class="history-date">'+safe(r.datetime)+'</div>'
+        +'<span class="history-chevron">\u25BE</span>'
+        +'</div>'
+        +'<div class="history-situation">'+safe(r.situation||'(sem situa\u00E7\u00E3o)')+'</div>'
+        +'<div class="history-feeling">'+feelingEmoji(r.feeling)+' '+safe(r.feeling||'\u2013')+'</div>'
+        +'<div class="history-anx">Ansiedade: '+r.anxiety1+'/10 \u2192 '+r.anxiety2+'/10</div>'
+        +'</div>'
+        +'<div class="history-detail">'
+        +(r.thought?'<div class="detail-row"><label>\uD83D\uDCAD Pensamento Autom\u00E1tico</label><p>'+safe(r.thought)+'</p></div>':'')
+        +(r.reaction?'<div class="detail-row"><label>\u26A1 Rea\u00E7\u00E3o</label><p>'+safe(r.reaction)+'</p></div>':'')
+        +(r.altThought?'<div class="detail-row"><label>\uD83C\uDF31 Pensamento Alternativo</label><p>'+safe(r.altThought)+'</p></div>':'')
+        +'<div class="detail-actions">'
+        +'<button class="btn-edit" onclick="loadRecord('+r.id+')">\u270F\uFE0F Editar</button>'
+        +'<button class="btn-del" onclick="deleteRecord('+r.id+')">\uD83D\uDDD1\uFE0F Deletar</button>'
+        +'</div></div></div>';
     }).join('');
   }
-
   area.innerHTML = html;
   applyLockUI();
 }
 
-function toggleItem(id) { document.getElementById('item-' + id).classList.toggle('open'); }
+function toggleItem(id) { document.getElementById('item-'+id).classList.toggle('open'); }
 
 function loadRecord(id) {
-  var r = records.find(function(x) { return x.id === id; });
+  var r = records.find(function(x){ return x.id===id; });
   if (!r) return;
   var parts = r.datetime.split(',')[0].trim().split('/');
-  if (parts.length === 3)
-    document.getElementById('f-date').value = parts[2] + '-' + parts[1].padStart(2,'0') + '-' + parts[0].padStart(2,'0');
+  if (parts.length===3) document.getElementById('f-date').value = parts[2]+'-'+parts[1].padStart(2,'0')+'-'+parts[0].padStart(2,'0');
   document.getElementById('f-time').value = r.datetime.includes(',') ? r.datetime.split(',')[1].trim() : '';
-  var pairs = [
-    ['f-situation','cc-situation', r.situation],
-    ['f-thought',  'cc-thought',   r.thought],
-    ['f-feeling',  'cc-feeling',   r.feeling],
-    ['f-reaction', 'cc-reaction',  r.reaction],
-    ['f-alt-thought','cc-alt',     r.altThought]
-  ];
-  pairs.forEach(function(p) {
-    var el = document.getElementById(p[0]);
-    el.value = p[2] || '';
-    updateCount(p[0], p[1]);
+  [['f-situation','cc-situation',r.situation],['f-thought','cc-thought',r.thought],['f-feeling','cc-feeling',r.feeling],['f-reaction','cc-reaction',r.reaction],['f-alt-thought','cc-alt',r.altThought]].forEach(function(p){
+    var el=document.getElementById(p[0]); el.value=p[2]||''; updateCount(p[0],p[1]);
   });
-  document.getElementById('f-anxiety1').value = r.anxiety1; document.getElementById('anx1-val').textContent = r.anxiety1;
-  document.getElementById('f-anxiety2').value = r.anxiety2; document.getElementById('anx2-val').textContent = r.anxiety2;
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('f-anxiety1').value=r.anxiety1; document.getElementById('anx1-val').textContent=r.anxiety1;
+  document.getElementById('f-anxiety2').value=r.anxiety2; document.getElementById('anx2-val').textContent=r.anxiety2;
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
   document.getElementById('page-form').classList.add('active');
   document.querySelectorAll('.tab')[0].classList.add('active');
-  editingId = r.id;
-  document.getElementById('btn-save').textContent = '\ud83d\udcbe Atualizar Registro';
-  applyLockUI();
-  setTimeout(resizeAll, 50);
-  showToast('Registro carregado para edi\u00e7\u00e3o');
+  editingId=r.id; document.getElementById('btn-save').textContent='\uD83D\uDCBE Atualizar Registro';
+  applyLockUI(); setTimeout(resizeAll,50);
+  showToast('Registro carregado para edi\u00E7\u00E3o');
 }
 
 function deleteRecord(id) {
   if (!confirm('Deletar este registro?')) return;
-  records = records.filter(function(r) { return r.id !== id; });
-  storageSave(records);
-  renderHistory();
+  records=records.filter(function(r){return r.id!==id;}); storageSave(records); renderHistory();
   showToast('Registro deletado');
 }
 
 function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 2800);
+  var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2800);
 }
 
-// ── INIT ──────────────────────────────────────────────────────
 applyLockUI();
-if ('serviceWorker' in navigator)
-  window.addEventListener('load', function() { navigator.serviceWorker.register('sw.js').catch(function(){}); });
+if ('serviceWorker' in navigator) window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
