@@ -27,23 +27,23 @@
     --success:     #6b7c4a;
   }
   [data-theme="dark"] {
-    --bg:          #000000;
-    --surface:     #0a0a0a;
-    --surface2:    #111111;
-    --accent:      #6b7c4a;
+    --bg:          #1c1c1c;
+    --surface:     #252525;
+    --surface2:    #2e2e2e;
+    --accent:      #8a9e60;
     --accent2:     #6b7c4a;
-    --text:        #f0fdf4;
-    --text-muted:  #4d7a5a;
-    --placeholder: #2a4a32;
-    --border:      #163020;
-    --success:     #6b7c4a;
+    --text:        #e0e0e0;
+    --text-muted:  #9aaa80;
+    --placeholder: #5a6650;
+    --border:      #3a3f30;
+    --success:     #8a9e60;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'DM Sans', sans-serif;
-    font-size: 17px; /* base ligeiramente maior em todo o app */
+    font-size: 17px;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -106,7 +106,7 @@
     width: 100%; border: none; background: transparent;
     font-family: 'DM Sans', sans-serif; font-size: 1rem;
     color: var(--text); resize: none; outline: none; line-height: 1.6;
-    min-height: 64px; overflow: hidden; /* auto-expand */
+    min-height: 64px; overflow: hidden;
   }
   .field-card textarea::placeholder { color: var(--placeholder); font-style: italic; opacity: 1; }
 
@@ -119,9 +119,9 @@
     background: var(--surface2); font-family: 'DM Sans', sans-serif;
     font-size: 0.88rem; color: var(--text); padding: 9px 8px; outline: none;
     -webkit-appearance: none; transition: border-color 0.2s, background 0.3s;
-    width: 0; /* force flex to control width */
+    width: 0;
   }
-  .datetime-row input[type="date"] { flex: 2; } /* data precisa de mais espaço que hora */
+  .datetime-row input[type="date"] { flex: 2; }
   .datetime-row input:focus { border-color: var(--accent); }
   .btn-now {
     padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border);
@@ -143,10 +143,7 @@
     font-weight: 500; font-size: 0.95rem; cursor: pointer;
     transition: transform 0.15s, box-shadow 0.15s;
   }
-  .btn-save.saved {
-    background: var(--accent);
-    animation: savePop 0.4s ease;
-  }
+  .btn-save.saved { background: var(--accent); animation: savePop 0.4s ease; }
   @keyframes savePop {
     0%   { transform: scale(1); }
     40%  { transform: scale(1.04); }
@@ -183,7 +180,6 @@
   .days-counter { font-size: 0.84rem; color: var(--text-muted); text-align: center; padding: 0 0 14px; }
   .days-counter span { color: var(--accent); font-weight: 700; font-size: 0.96rem; }
 
-  /* history item — expandable */
   .history-item {
     background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
     margin-bottom: 12px; overflow: hidden; transition: background 0.3s, border-color 0.3s;
@@ -202,8 +198,6 @@
     color: var(--accent); font-size: 0.8rem; padding: 3px 10px;
     border-radius: 20px; font-weight: 500;
   }
-
-  /* expanded detail */
   .history-detail {
     display: none; padding: 0 16px 16px; border-top: 1px solid var(--border);
     flex-direction: column; gap: 10px;
@@ -234,13 +228,7 @@
     font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
     color: var(--accent); font-weight: 500; margin-bottom: 6px;
   }
-  .chart-summary { font-size: 0.9rem; font-weight: 500; margin-bottom: 14px; line-height: 1.4; }
   .chart-canvas-wrap { position: relative; width: 100%; height: 180px; }
-  .chart-stats {
-    display: flex; gap: 16px; margin-top: 12px; padding-top: 10px;
-    border-top: 1px solid var(--border); font-size: 0.84rem; font-weight: 500; flex-wrap: wrap;
-  }
-  .legend-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
 
   /* ── SEND PANEL ── */
   .send-panel {
@@ -252,7 +240,9 @@
   .send-panel-label { font-size: 0.86rem; color: var(--text-muted); flex: 1; min-width: 100px; }
   .send-panel-label strong { display: block; color: var(--text); font-size: 0.94rem; margin-bottom: 2px; }
   .send-panel-btns { display: flex; gap: 7px; flex-wrap: wrap; }
-
+  .btn-export-pdf   { padding: 8px 13px; border-radius: 10px; border: none; background: var(--accent2);
+                      color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+                      font-weight: 500; cursor: pointer; white-space: nowrap; }
   .btn-export-email { padding: 8px 13px; border-radius: 10px; border: none; background: var(--accent);
                       color: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
                       font-weight: 500; cursor: pointer; white-space: nowrap; }
@@ -289,16 +279,13 @@
 
 <!-- FORM -->
 <div class="page active" id="page-form">
-
   <div id="form-locked" class="locked-banner" style="display:none">
     <h3>🔒 Limite de 10 dias atingido</h3>
     <p>Você não pode salvar novos registros até enviar o histórico e limpar o ciclo.</p>
     <button class="btn-go-history" onclick="goHistory()">📋 Ir para o Histórico</button>
   </div>
-
   <div id="form-content">
     <div class="form-area">
-
       <div class="field-card">
         <label>📅 Data / Hora</label>
         <div class="datetime-row">
@@ -307,25 +294,21 @@
           <button class="btn-now" onclick="setNow()">Agora</button>
         </div>
       </div>
-
       <div class="field-card">
-        <label>📍 Situação <span class="char-count" id="cc-situation">0</span></label>
+        <label>📍 Situação <span class="char-count" id="cc-situation"></span></label>
         <textarea id="f-situation" placeholder="onde você estava, o que aconteceu, com quem..."
           oninput="autoResize(this);updateCount('f-situation','cc-situation')"></textarea>
       </div>
-
       <div class="field-card">
-        <label>💭 Pensamento Automático <span class="char-count" id="cc-thought">0</span></label>
+        <label>💭 Pensamento Automático <span class="char-count" id="cc-thought"></span></label>
         <textarea id="f-thought" placeholder="o que passou pela sua cabeça naquele momento..."
           oninput="autoResize(this);updateCount('f-thought','cc-thought')"></textarea>
       </div>
-
       <div class="field-card">
-        <label>❤️ Sentimento <span class="char-count" id="cc-feeling">0</span></label>
+        <label>❤️ Sentimento <span class="char-count" id="cc-feeling"></span></label>
         <textarea id="f-feeling" placeholder="que emoção você sentiu — ansiedade, tristeza, raiva..."
           oninput="autoResize(this);updateCount('f-feeling','cc-feeling')"></textarea>
       </div>
-
       <div class="field-card">
         <label>📊 Grau de Ansiedade Inicial (0–10)</label>
         <div class="slider-row">
@@ -334,19 +317,16 @@
           <span class="slider-val" id="anx1-val">0</span>
         </div>
       </div>
-
       <div class="field-card">
-        <label>⚡ Reação / Comportamento <span class="char-count" id="cc-reaction">0</span></label>
+        <label>⚡ Reação / Comportamento <span class="char-count" id="cc-reaction"></span></label>
         <textarea id="f-reaction" placeholder="como você reagiu, o que fez..."
           oninput="autoResize(this);updateCount('f-reaction','cc-reaction')"></textarea>
       </div>
-
       <div class="field-card">
-        <label>🌱 Pensamento Alternativo <span class="char-count" id="cc-alt">0</span></label>
+        <label>🌱 Pensamento Alternativo <span class="char-count" id="cc-alt"></span></label>
         <textarea id="f-alt-thought" placeholder="uma forma mais equilibrada de ver a situação..."
           oninput="autoResize(this);updateCount('f-alt-thought','cc-alt')"></textarea>
       </div>
-
       <div class="field-card">
         <label>📊 Grau de Ansiedade Final (0–10)</label>
         <div class="slider-row">
@@ -355,7 +335,6 @@
           <span class="slider-val" id="anx2-val">0</span>
         </div>
       </div>
-
     </div>
     <div class="form-actions">
       <button class="btn-clear" onclick="clearForm()">🗑️ Limpar</button>
@@ -377,7 +356,7 @@ const MAX_DAYS   = 10;
 
 let records = [];
 try { records = JSON.parse(localStorage.getItem('rp_records') || '[]'); } catch(e) {}
-let editingId = null; // null = novo registro, número = editando existente
+let editingId = null;
 
 function storageSave(d) { try { localStorage.setItem('rp_records', JSON.stringify(d)); } catch(e) {} }
 
@@ -385,7 +364,7 @@ function storageSave(d) { try { localStorage.setItem('rp_records', JSON.stringif
 let darkMode = localStorage.getItem('rp_dark') === '1';
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : '');
-  document.getElementById('theme-btn').textContent = darkMode ? '☀️' : '🌙';
+  document.getElementById('theme-btn').textContent = darkMode ? '\u2600\ufe0f' : '\ud83c\udf19';
 }
 function toggleTheme() {
   darkMode = !darkMode;
@@ -394,11 +373,8 @@ function toggleTheme() {
 }
 applyTheme();
 
-// ── AUTO-RESIZE TEXTAREA ───────────────────────────────────────
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = el.scrollHeight + 'px';
-}
+// ── AUTO-RESIZE ────────────────────────────────────────────────
+function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
 function updateCount(fieldId, countId) {
   const len = document.getElementById(fieldId).value.length;
   document.getElementById(countId).textContent = len > 0 ? len + ' car.' : '';
@@ -407,10 +383,7 @@ function resetCounts() {
   ['cc-situation','cc-thought','cc-feeling','cc-reaction','cc-alt']
     .forEach(id => { document.getElementById(id).textContent = ''; });
 }
-// Resize all textareas on load (when loading a record)
-function resizeAll() {
-  document.querySelectorAll('.field-card textarea').forEach(autoResize);
-}
+function resizeAll() { document.querySelectorAll('.field-card textarea').forEach(autoResize); }
 
 // ── DATE ──────────────────────────────────────────────────────
 function setNow() {
@@ -443,9 +416,7 @@ function goHistory() {
 }
 
 // ── LOCK ──────────────────────────────────────────────────────
-function countDays() {
-  return new Set(records.map(r => r.dateKey)).size;
-}
+function countDays() { return new Set(records.map(r => r.dateKey)).size; }
 function isLocked() { return countDays() >= MAX_DAYS; }
 function applyLockUI() {
   const locked = isLocked();
@@ -457,9 +428,7 @@ function applyLockUI() {
 function clearForm() {
   setNow();
   editingId = null;
-  const fields = ['f-situation','f-thought','f-feeling','f-reaction','f-alt-thought'];
-  const counts = ['cc-situation','cc-thought','cc-feeling','cc-reaction','cc-alt'];
-  fields.forEach((id, i) => {
+  ['f-situation','f-thought','f-feeling','f-reaction','f-alt-thought'].forEach(id => {
     const el = document.getElementById(id);
     el.value = '';
     el.style.height = '';
@@ -468,7 +437,7 @@ function clearForm() {
   document.getElementById('f-anxiety1').value = 0; document.getElementById('anx1-val').textContent = '0';
   document.getElementById('f-anxiety2').value = 0; document.getElementById('anx2-val').textContent = '0';
   const btn = document.getElementById('btn-save');
-  btn.textContent = '💾 Salvar Registro';
+  btn.textContent = '\ud83d\udcbe Salvar Registro';
   btn.classList.remove('saved');
 }
 
@@ -481,8 +450,7 @@ function getDatetimeDisplay() {
 }
 
 function saveRecord() {
-  if (isLocked() && !editingId) { showToast('Limite atingido. Envie o histórico primeiro.'); return; }
-
+  if (isLocked() && !editingId) { showToast('Limite atingido. Envie o hist\u00f3rico primeiro.'); return; }
   const data = {
     datetime:   getDatetimeDisplay(),
     dateKey:    document.getElementById('f-date').value || new Date().toLocaleDateString('pt-BR'),
@@ -494,35 +462,27 @@ function saveRecord() {
     altThought: document.getElementById('f-alt-thought').value.trim(),
     anxiety2:   +document.getElementById('f-anxiety2').value,
   };
-
   if (!data.situation && !data.thought && !data.feeling) {
-    showToast('Preencha pelo menos situação, pensamento ou sentimento'); return;
+    showToast('Preencha pelo menos situa\u00e7\u00e3o, pensamento ou sentimento'); return;
   }
-
   if (editingId) {
-    // Atualiza registro existente, preservando o id original
     const idx = records.findIndex(r => r.id === editingId);
     if (idx !== -1) records[idx] = { ...records[idx], ...data };
     editingId = null;
   } else {
-    // Novo registro
     records.unshift({ id: Date.now(), ...data });
   }
-
   storageSave(records);
-
-  // Animação do botão salvar
   const btn = document.getElementById('btn-save');
-  btn.textContent = '✅ Salvo!';
+  btn.textContent = '\u2705 Salvo!';
   btn.classList.add('saved');
-  setTimeout(() => { btn.textContent = '💾 Salvar Registro'; btn.classList.remove('saved'); }, 1800);
-
+  setTimeout(() => { btn.textContent = '\ud83d\udcbe Salvar Registro'; btn.classList.remove('saved'); }, 1800);
   clearForm();
-  showToast('Registro salvo! 💜');
+  showToast('Registro salvo! \ud83d\udc9c');
   setTimeout(() => goHistory(), 1000);
 }
 
-// ── EXPORT ────────────────────────────────────────────────────
+// ── EMAIL EXPORT ───────────────────────────────────────────────
 function buildExportText() {
   const lines = [
     'REGISTRO DE PENSAMENTOS — TCC',
@@ -533,62 +493,163 @@ function buildExportText() {
   records.forEach((r, i) => {
     lines.push('REGISTRO ' + (i+1) + ' — ' + r.datetime);
     lines.push('-'.repeat(40));
-    if (r.situation)   lines.push('Situação:               ' + r.situation);
-    if (r.thought)     lines.push('Pensamento automático:  ' + r.thought);
+    if (r.situation)   lines.push('Situa\u00e7\u00e3o:               ' + r.situation);
+    if (r.thought)     lines.push('Pensamento autom\u00e1tico:  ' + r.thought);
     if (r.feeling)     lines.push('Sentimento:             ' + r.feeling);
-    lines.push(         'Ansiedade inicial:      ' + r.anxiety1 + '/10');
-    if (r.reaction)    lines.push('Reação:                 ' + r.reaction);
+    lines.push('Ansiedade inicial:      ' + r.anxiety1 + '/10');
+    if (r.reaction)    lines.push('Rea\u00e7\u00e3o:                 ' + r.reaction);
     if (r.altThought)  lines.push('Pensamento alternativo: ' + r.altThought);
-    lines.push(         'Ansiedade final:        ' + r.anxiety2 + '/10');
+    lines.push('Ansiedade final:        ' + r.anxiety2 + '/10');
     lines.push('');
   });
   return lines.join('\n');
 }
-
 function openEmail() {
   const s = encodeURIComponent('Registro de Pensamentos TCC — ' + new Date().toLocaleDateString('pt-BR'));
   const b = encodeURIComponent(buildExportText());
   window.open('https://mail.google.com/mail/?view=cm&to=' + EMAIL_DEST + '&su=' + s + '&body=' + b, '_blank');
 }
 function confirmClear() {
-  if (confirm('Histórico exportado?\n\nTodos os registros serão apagados e um novo ciclo começará.')) {
+  if (confirm('Hist\u00f3rico exportado?\n\nTodos os registros ser\u00e3o apagados e um novo ciclo come\u00e7ar\u00e1.')) {
     records = []; storageSave(records); renderHistory();
-    showToast('Histórico limpo! Novo ciclo iniciado ✨');
+    showToast('Hist\u00f3rico limpo! Novo ciclo iniciado \u2728');
   }
 }
 
-// ── CHART ─────────────────────────────────────────────────────
-let _anxietyChart = null;
+// ── PDF EXPORT ─────────────────────────────────────────────────
+function exportPDF() {
+  if (!records.length) { showToast('Nenhum registro para exportar'); return; }
+  if (typeof window.jspdf === 'undefined') {
+    showToast('Aguarde, carregando PDF...');
+    setTimeout(exportPDF, 1500);
+    return;
+  }
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  var pageW = doc.internal.pageSize.getWidth();
+  var pageH = doc.internal.pageSize.getHeight();
+  var mX = 8, mY = 12;
+  var tableW = pageW - mX * 2;
+  var oliva = [74, 85, 53];
+  var olivaL = [212, 219, 192];
+  var rowAlt = [240, 242, 234];
 
+  // Title
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(74, 85, 53);
+  doc.text('REGISTRO DE PENSAMENTOS', pageW / 2, mY, { align: 'center' });
+
+  var headers = ['Data/Hora', 'Situa\u00e7\u00e3o', 'Pensamento\nAutom\u00e1tico', 'Sentimento',
+                 'Grau\nInicial', 'Rea\u00e7\u00e3o', 'Pensamento\nAlternativo', 'Grau\nFinal'];
+  var cw = [
+    tableW*0.10, tableW*0.17, tableW*0.15, tableW*0.11,
+    tableW*0.08, tableW*0.15, tableW*0.16, tableW*0.08
+  ];
+  var startY = mY + 6;
+  var hdrH = 10;
+
+  function drawHeader(y) {
+    var x = mX;
+    headers.forEach(function(h, i) {
+      doc.setFillColor(oliva[0], oliva[1], oliva[2]);
+      doc.rect(x, y, cw[i], hdrH, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      var lines = h.split('\n');
+      var lh = 3.2;
+      var tot = lines.length * lh;
+      lines.forEach(function(line, li) {
+        doc.text(line, x + cw[i]/2, y + (hdrH - tot)/2 + li*lh + lh*0.8, { align: 'center' });
+      });
+      x += cw[i];
+    });
+  }
+
+  drawHeader(startY);
+
+  var rowH = 20;
+  var y = startY + hdrH;
+
+  records.forEach(function(r, idx) {
+    if (y + rowH > pageH - mY) {
+      doc.addPage();
+      y = mY;
+      drawHeader(y);
+      y += hdrH;
+    }
+    var bg = idx % 2 === 0 ? [255,255,255] : rowAlt;
+    doc.setFillColor(bg[0], bg[1], bg[2]);
+    doc.rect(mX, y, tableW, rowH, 'F');
+    doc.setDrawColor(olivaL[0], olivaL[1], olivaL[2]);
+    doc.setLineWidth(0.2);
+    doc.rect(mX, y, tableW, rowH, 'S');
+    var x = mX;
+    cw.forEach(function(w, ci) {
+      if (ci > 0) { doc.setDrawColor(olivaL[0], olivaL[1], olivaL[2]); doc.line(x, y, x, y+rowH); }
+      x += w;
+    });
+    var cells = [
+      r.datetime || '',
+      r.situation || '',
+      r.thought || '',
+      r.feeling || '',
+      String(r.anxiety1 !== undefined ? r.anxiety1 : 0) + '/10',
+      r.reaction || '',
+      r.altThought || '',
+      String(r.anxiety2 !== undefined ? r.anxiety2 : 0) + '/10'
+    ];
+    x = mX;
+    cells.forEach(function(text, ci) {
+      var isGrau = ci === 4 || ci === 7;
+      doc.setFont('helvetica', isGrau ? 'bold' : 'normal');
+      doc.setFontSize(isGrau ? 9 : 6.5);
+      doc.setTextColor(30, 30, 30);
+      var pad = 1.5;
+      if (isGrau) {
+        doc.text(text, x + cw[ci]/2, y + rowH/2 + 1.5, { align: 'center' });
+      } else {
+        var lines = doc.splitTextToSize(text, cw[ci] - pad*2);
+        var maxL = Math.floor((rowH - 4) / 3.2);
+        lines.slice(0, maxL).forEach(function(line, li) {
+          doc.text(line, x + pad, y + 4 + li * 3.2);
+        });
+      }
+      x += cw[ci];
+    });
+    y += rowH;
+  });
+
+  doc.setDrawColor(oliva[0], oliva[1], oliva[2]);
+  doc.setLineWidth(0.5);
+  doc.line(mX, y, mX + tableW, y);
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(7);
+  doc.setTextColor(150, 150, 150);
+  doc.text('Gerado pelo app RDP', pageW/2, pageH - 4, { align: 'center' });
+
+  var date = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+  doc.save('RDP-' + date + '.pdf');
+  showToast('PDF exportado! \ud83d\udcc4');
+}
+
+// ── CHART ─────────────────────────────────────────────────────
+var _anxietyChart = null;
 function renderChart() {
   if (records.length < 2) return '';
-
-  const ordered = [...records].slice(0, 10).reverse(); // 10 mais recentes em ordem cronológica
-  const labels  = ordered.map(r => r.datetime.split(',')[0].trim());
-  const a2vals  = ordered.map(r => +r.anxiety2);
-
-  const totalImproved = ordered.filter(r => +r.anxiety2 < +r.anxiety1).length;
-  const totalWorse    = ordered.filter(r => +r.anxiety2 > +r.anxiety1).length;
-  const totalSame     = ordered.length - totalImproved - totalWorse;
-  const summaryColor  = totalImproved >= totalWorse ? '#6b7c4a' : '#c0724a';
-  const summaryMsg    = totalImproved > totalWorse
-    ? '📉 Na maioria das reflexões sua ansiedade reduziu'
-    : totalWorse > totalImproved
-    ? '📈 Na maioria das reflexões sua ansiedade aumentou'
-    : '➡️ Sua ansiedade manteve-se estável nas reflexões';
-
-  const id = 'anxiety-chart-' + Date.now();
-
-  // destroy previous chart instance if any
+  var ordered = records.slice(0, 10).reverse();
+  var labels  = ordered.map(function(r) { return r.datetime.split(',')[0].trim(); });
+  var a2vals  = ordered.map(function(r) { return +r.anxiety2; });
+  var id = 'anxiety-chart-' + Date.now();
   if (_anxietyChart) { try { _anxietyChart.destroy(); } catch(e) {} _anxietyChart = null; }
-
-  setTimeout(() => {
-    const canvas = document.getElementById(id);
+  setTimeout(function() {
+    var canvas = document.getElementById(id);
     if (!canvas || !window.Chart) return;
     _anxietyChart = new window.Chart(canvas, {
       type: 'line',
       data: {
-        labels,
+        labels: labels,
         datasets: [{
           label: 'Ansiedade final',
           data: a2vals,
@@ -600,7 +661,7 @@ function renderChart() {
           pointBorderColor: '#ffffff',
           pointBorderWidth: 2,
           pointRadius: 6,
-          pointHoverRadius: 8,
+          pointHoverRadius: 8
         }]
       },
       options: {
@@ -608,74 +669,67 @@ function renderChart() {
         maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-          y: {
-            min: 0, max: 10,
-            ticks: { stepSize: 5, color: '#8a9e60', font: { size: 11 } },
-            grid: { color: 'rgba(138,158,96,0.15)' },
-          },
-          x: {
-            ticks: { color: '#8a9e60', font: { size: 11 }, maxRotation: 0 },
-            grid: { display: false },
-          }
+          y: { min: 0, max: 10,
+               ticks: { stepSize: 5, color: '#8a9e60', font: { size: 11 } },
+               grid: { color: 'rgba(138,158,96,0.15)' } },
+          x: { ticks: { color: '#8a9e60', font: { size: 11 }, maxRotation: 0 },
+               grid: { display: false } }
         }
       }
     });
   }, 50);
-
-  return '<div class="chart-card">'
-    + '<div class="chart-title">📊 Evolução da Ansiedade</div>'
-    + '<div class="chart-canvas-wrap"><canvas id="' + id + '" role="img" aria-label="Linha de evolução da ansiedade final ao longo dos registros"></canvas></div>'
-    + '</div>';
+  return '<div class="chart-card"><div class="chart-title">\ud83d\udcca Evolu\u00e7\u00e3o da Ansiedade</div>'
+    + '<div class="chart-canvas-wrap"><canvas id="' + id + '"></canvas></div></div>';
 }
 
 // ── HISTORY ───────────────────────────────────────────────────
 function renderHistory() {
-  const area   = document.getElementById('history-area');
-  const dias   = countDays();
-  const locked = dias >= MAX_DAYS;
-  let html = '';
+  var area   = document.getElementById('history-area');
+  var dias   = countDays();
+  var locked = dias >= MAX_DAYS;
+  var html   = '';
 
   if (records.length > 0) {
-    const urgentLabel = locked
-      ? '<strong style="color:#c0393b">🔒 Limite atingido — envie e limpe para continuar</strong>'
-      : '<strong>Enviar histórico</strong>';
-    const urgentNote = locked
-      ? 'Você atingiu ' + MAX_DAYS + ' dias. <b>Novos registros estão bloqueados</b> até enviar e limpar.'
-      : 'Envie a qualquer momento e limpe para começar um novo ciclo.';
+    var urgentLabel = locked
+      ? '<strong style="color:#c0393b">\ud83d\udd12 Limite atingido — envie e limpe para continuar</strong>'
+      : '<strong>Enviar hist\u00f3rico</strong>';
+    var urgentNote = locked
+      ? 'Voc\u00ea atingiu ' + MAX_DAYS + ' dias. <b>Novos registros est\u00e3o bloqueados</b> at\u00e9 enviar e limpar.'
+      : 'Envie a qualquer momento e limpe para come\u00e7ar um novo ciclo.';
     html += '<div class="send-panel" style="' + (locked ? 'border-color:#f0ad4e;background:#fffbf0' : '') + '">'
       + '<div class="send-panel-label">' + urgentLabel + '<span>' + urgentNote + '</span></div>'
       + '<div class="send-panel-btns">'
-      + '<button class="btn-export-email" onclick="openEmail()">📧 Gmail</button>'
-      + '<button class="btn-export-clear" onclick="confirmClear()">🗑️ Limpar</button>'
+      + '<button class="btn-export-pdf"   onclick="exportPDF()">\ud83d\udcc4 PDF</button>'
+      + '<button class="btn-export-email" onclick="openEmail()">\ud83d\udce7 Gmail</button>'
+      + '<button class="btn-export-clear" onclick="confirmClear()">\ud83d\uddd1\ufe0f Limpar</button>'
       + '</div></div>';
   }
 
-  // Chart
   html += renderChart();
 
   if (!records.length) {
-    html += '<div class="history-empty"><div class="icon">📖</div><p>Nenhum registro ainda.<br>Preencha o formulário!</p></div>';
+    html += '<div class="history-empty"><div class="icon">\ud83d\udcd6</div><p>Nenhum registro ainda.<br>Preencha o formul\u00e1rio!</p></div>';
   } else {
-    html += '<div class="days-counter">📅 <span>' + dias + '</span> dia' + (dias!==1?'s':'') + ' de ' + MAX_DAYS + '</div>';
-    html += records.map(r => {
-      const safe = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    html += '<div class="days-counter">\ud83d\udcc5 <span>' + dias + '</span> dia' + (dias!==1?'s':'') + ' de ' + MAX_DAYS + '</div>';
+    html += records.map(function(r) {
+      function safe(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
       return '<div class="history-item" id="item-' + r.id + '">'
         + '<div class="history-summary" onclick="toggleItem(' + r.id + ')">'
-        + '  <div class="history-summary-row">'
-        + '    <div class="history-date">' + safe(r.datetime) + '</div>'
-        + '    <span class="history-chevron">▾</span>'
-        + '  </div>'
-        + '  <div class="history-situation">' + safe(r.situation || '(sem situação)') + '</div>'
-        + '  <div class="history-feeling">😔 ' + safe(r.feeling || '–') + '</div>'
-        + '  <div class="history-anx">Ansiedade: ' + r.anxiety1 + '/10 → ' + r.anxiety2 + '/10</div>'
+        + '<div class="history-summary-row">'
+        + '<div class="history-date">' + safe(r.datetime) + '</div>'
+        + '<span class="history-chevron">\u25be</span>'
+        + '</div>'
+        + '<div class="history-situation">' + safe(r.situation || '(sem situa\u00e7\u00e3o)') + '</div>'
+        + '<div class="history-feeling">\ud83d\ude14 ' + safe(r.feeling || '\u2013') + '</div>'
+        + '<div class="history-anx">Ansiedade: ' + r.anxiety1 + '/10 \u2192 ' + r.anxiety2 + '/10</div>'
         + '</div>'
         + '<div class="history-detail">'
-        + (r.thought    ? '<div class="detail-row"><label>💭 Pensamento Automático</label><p>' + safe(r.thought) + '</p></div>' : '')
-        + (r.reaction   ? '<div class="detail-row"><label>⚡ Reação</label><p>' + safe(r.reaction) + '</p></div>' : '')
-        + (r.altThought ? '<div class="detail-row"><label>🌱 Pensamento Alternativo</label><p>' + safe(r.altThought) + '</p></div>' : '')
+        + (r.thought    ? '<div class="detail-row"><label>\ud83d\udcad Pensamento Autom\u00e1tico</label><p>' + safe(r.thought) + '</p></div>' : '')
+        + (r.reaction   ? '<div class="detail-row"><label>\u26a1 Rea\u00e7\u00e3o</label><p>' + safe(r.reaction) + '</p></div>' : '')
+        + (r.altThought ? '<div class="detail-row"><label>\ud83c\udf31 Pensamento Alternativo</label><p>' + safe(r.altThought) + '</p></div>' : '')
         + '<div class="detail-actions">'
-        + '  <button class="btn-edit" onclick="loadRecord(' + r.id + ')">✏️ Editar</button>'
-        + '  <button class="btn-del"  onclick="deleteRecord(' + r.id + ')">🗑️ Deletar</button>'
+        + '<button class="btn-edit" onclick="loadRecord(' + r.id + ')">\u270f\ufe0f Editar</button>'
+        + '<button class="btn-del"  onclick="deleteRecord(' + r.id + ')">\ud83d\uddd1\ufe0f Deletar</button>'
         + '</div></div></div>';
     }).join('');
   }
@@ -684,63 +738,60 @@ function renderHistory() {
   applyLockUI();
 }
 
-function toggleItem(id) {
-  document.getElementById('item-' + id).classList.toggle('open');
-}
+function toggleItem(id) { document.getElementById('item-' + id).classList.toggle('open'); }
 
 function loadRecord(id) {
-  const r = records.find(x => x.id === id);
+  var r = records.find(function(x) { return x.id === id; });
   if (!r) return;
-  const parts = r.datetime.split(',')[0].trim().split('/');
+  var parts = r.datetime.split(',')[0].trim().split('/');
   if (parts.length === 3)
     document.getElementById('f-date').value = parts[2] + '-' + parts[1].padStart(2,'0') + '-' + parts[0].padStart(2,'0');
   document.getElementById('f-time').value = r.datetime.includes(',') ? r.datetime.split(',')[1].trim() : '';
-
-  const pairs = [
-    ['f-situation', 'cc-situation', r.situation],
-    ['f-thought',   'cc-thought',   r.thought],
-    ['f-feeling',   'cc-feeling',   r.feeling],
-    ['f-reaction',  'cc-reaction',  r.reaction],
-    ['f-alt-thought','cc-alt',      r.altThought],
+  var pairs = [
+    ['f-situation','cc-situation', r.situation],
+    ['f-thought',  'cc-thought',   r.thought],
+    ['f-feeling',  'cc-feeling',   r.feeling],
+    ['f-reaction', 'cc-reaction',  r.reaction],
+    ['f-alt-thought','cc-alt',     r.altThought]
   ];
-  pairs.forEach(([fid, cid, val]) => {
-    const el = document.getElementById(fid);
-    el.value = val || '';
-    updateCount(fid, cid);
+  pairs.forEach(function(p) {
+    var el = document.getElementById(p[0]);
+    el.value = p[2] || '';
+    updateCount(p[0], p[1]);
   });
   document.getElementById('f-anxiety1').value = r.anxiety1; document.getElementById('anx1-val').textContent = r.anxiety1;
   document.getElementById('f-anxiety2').value = r.anxiety2; document.getElementById('anx2-val').textContent = r.anxiety2;
-
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById('page-form').classList.add('active');
   document.querySelectorAll('.tab')[0].classList.add('active');
   editingId = r.id;
-  document.getElementById('btn-save').textContent = '💾 Atualizar Registro';
+  document.getElementById('btn-save').textContent = '\ud83d\udcbe Atualizar Registro';
   applyLockUI();
   setTimeout(resizeAll, 50);
-  showToast('Registro carregado para edição');
+  showToast('Registro carregado para edi\u00e7\u00e3o');
 }
 
 function deleteRecord(id) {
   if (!confirm('Deletar este registro?')) return;
-  records = records.filter(r => r.id !== id);
+  records = records.filter(function(r) { return r.id !== id; });
   storageSave(records);
   renderHistory();
   showToast('Registro deletado');
 }
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+  setTimeout(function() { t.classList.remove('show'); }, 2800);
 }
 
 // ── INIT ──────────────────────────────────────────────────────
 applyLockUI();
 if ('serviceWorker' in navigator)
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+  window.addEventListener('load', function() { navigator.serviceWorker.register('sw.js').catch(function(){}); });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
